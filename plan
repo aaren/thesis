@@ -1,0 +1,37 @@
+Things I need to do to finish the thesis.
+
+### Build system
+
+Aim: each chapter of thesis as an ipython notebook.
+
+The notebooks need to compile to latex to allow pdf output.
+
+Latex funcionality is already in ipython. Need to extend to allow figures and
+citations and create a suitable template (e.g. extend SEE thesis template).
+
+Possibly use altered pandoc with figure references.
+
+TODO
+
+- working prototype (simple notebook that compiles to see thesis template).
+- add in citations
+- add in figure references
+- directory structure
+- build script (e.g. `make chapter1`) - use scons?
+
+
+
+### Results
+
+Uggh.
+
+
+
+
+### Methods
+
+Fair progress on this. Have series of technical notes to self on solving some
+processing issues. 
+
+First draft: concatenate tech notes.
+Second draft: add piv laser / camera details
