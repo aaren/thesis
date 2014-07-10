@@ -14,9 +14,9 @@ Removing waves from lab data
 Wave extraction:
 
 ```python
-r = g.ProcessedRun(cache_path=g.default_processed + 'r14_01_14a.hdf5')                                                                               
+r = g.ProcessedRun(cache_path=g.default_processed + 'r14_01_14a.hdf5')
 
-gobbler = g.WaveGobbler(r)
+gobbler = g.turbulence.WaveGobbler(r)
 simple_waves = gobbler.get_waves(r.U)
 clever_waves = gobbler.get_clever_waves(r.U)
 ```
@@ -27,34 +27,36 @@ fig, axes = plt.subplots(nrows=6, figsize=(12, 6))
 sample = np.s_[:, 10, :]
 
 ax[0].set_title('Unprocessed field')
-ax[0].contourf(r.U[:, 10, :]
-ax[0].set_xlabel('time')
+ax[0].contourf(r.U[sample], 100)
 ax[0].set_ylabel('height')
+ax[0].set_xticklabels([])
 
 ax[1].set_title('Simple waves')
 ax[1].contourf(simple_waves[0])
-ax[1].set_xlabel('time')
 ax[1].set_ylabel('horizontal')
+ax[1].set_xticklabels([])
 
 ax[2].set_title('Simple processed field')
 ax[2].contourf(r.U[sample] - simple_waves[sample], 100)
-ax[2].set_xlabel('time')
-ax[2].set_ylabel('horizontal')
+ax[2].set_ylabel('height')
+ax[2].set_xticklabels([])
 
 ax[3].set_title('Clever waves')
 ax[3].contourf(clever_waves[0])
-ax[3].set_xlabel('time')
 ax[3].set_ylabel('horizontal')
+ax[3].set_xticklabels([])
 
 ax[4].set_title('Clever processed field')
-ax[2].contourf(r.U[sample] - clever_waves[sample], 100)
-ax[2].set_xlabel('time')
-ax[2].set_ylabel('horizontal')
+ax[4].contourf(r.U[sample] - clever_waves[sample], 100)
+ax[4].set_ylabel('height')
+ax[4].set_xticklabels([])
 
 ax[5].set_title('Difference')
 ax[5].contourf((simple_waves - clever_waves)[0], 100)
-ax[5].set_xlabel('time')
 ax[5].set_ylabel('horizontal')
+ax[5].set_xlabel('time')
+
+fig.tight_layout()
 ```
 
 
