@@ -1,8 +1,10 @@
 ---
 title: A profoundly interesting title.
+
 author: 
     name: Your name
     email: your@email.address
+
 abstract: |
     This is the abstract: a nice concise plain text description
     of what is to come.
