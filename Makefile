@@ -21,7 +21,8 @@ pdf:
 		--template latex/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
-		--variable=postlims:"$$postlims"
+		--variable=postlims:"$$postlims" \
+        --filter filters.py
 
 docx:
 	pandoc $(metadata) test.md --template Thesis.tex --chapter -o test.docx
