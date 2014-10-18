@@ -5,20 +5,6 @@
 % Set up the document
 %\documentclass[a4paper, 11pt, oneside]{Thesis}  % Use the "Thesis" style, based on the ECS Thesis style by Steve Gunn
 \documentclass[a4paper, 11pt,oneside]{Thesis} 
-%\includeonly{Chapters/prelims}
-% \includeonly{Chapters/Intro}
-% \includeonly{Chapters/LitReview}
-% \includeonly{Chapters/Data}
-% \includeonly{Chapters/TheStorms}
-%\includeonly{Chapters/NWP}
-%\includeonly{Chapters/SPS}
-%\includeonly{Chapters/Concl}
-%\includeonly{Chapters/postlims}
-%
-% for multiple inclusions, still use just one \includeonly command as follows:
-\includeonly{Chapters/prelims,Chapters/Intro,Chapters/LitReview,Chapters/Data,Chapters/TheStorms,Chapters/NWP,Chapters/SPS,Chapters/Concl,Chapters/postlims}
-% \includeonly{Chapters/prelims,Chapters/NWP,Chapters/SPS,Chapters/Concl}
-%
 \graphicspath{{Figures/}}  % Location of the graphics files (set up for graphics to be in PDF format)
 %
 % Include any extra LaTeX packages required
@@ -103,7 +89,6 @@
 \pagestyle{fancy}  % Use the "fancy" page style to implement the FancyHdr headers
 
 %----------------------------------------------------------------
-% \input{prelims}
 $prelims$
 % ----------------------------------------------------------------
 \mainmatter	  % Begin normal, numeric (1,2,3...) page numbering
@@ -113,18 +98,9 @@ $prelims$
 % Just uncomment the lines as you write the chapters
 
 $body$
-% \include{Chapters/Intro}
-% \include{Chapters/LitReview} 
-% \include{Chapters/Data} 
-% \include{Chapters/TheStorms}
-% \include{Chapters/NWP}
-% \include{Chapters/SPS}
-% \include{Chapters/Concl}
-%\input{./Space_holder}
 
 % ----------------------------------------------------------------
 \backmatter
 $postlims$
-% \include{Chapters/postlims}
 %----------------------------------------------------------------
 \end{document}  % The End
