@@ -1,11 +1,16 @@
+# This is pretty important. Default is /bin/sh
+SHELL := /bin/bash
+
 html:
 	pandoc test.md --parse-raw --to html -s --mathjax -H mathjax-conf.js > test.html
 
 pdf:
+	abbreviations=$$(pandoc abbreviations.md --to latex); \
+	prelims="$$(pandoc meta.yaml --template prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"; \
 	pandoc meta.yaml test.md -o test.pdf \
 		--template Thesis.tex \
 		--chapter \
-		--variable=prelims:"$$(pandoc meta.yaml --template prelims.tex --to latex)" \
+		--variable=prelims:"$$prelims" \
 		--variable=postlims:"$$(pandoc meta.yaml --template postlims.tex --to latex)"
 
 docx:
