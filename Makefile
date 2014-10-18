@@ -1,17 +1,18 @@
 # This is pretty important. Default is /bin/sh
 SHELL := /bin/bash
+metadata=meta.yaml
 
 html:
 	pandoc test.md --parse-raw --to html -s --mathjax -H mathjax-conf.js > test.html
 
 pdf:
 	abbreviations=$$(pandoc abbreviations.md --to latex); \
-	prelims="$$(pandoc meta.yaml --template prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"; \
+	prelims="$$(pandoc meta.yaml --template latex/prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"; \
 	pandoc meta.yaml test.md -o test.pdf \
-		--template Thesis.tex \
+		--template latex/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
-		--variable=postlims:"$$(pandoc meta.yaml --template postlims.tex --to latex)"
+		--variable=postlims:"$$(pandoc meta.yaml --template latex/postlims.tex --to latex)"
 
 docx:
 	pandoc meta.yaml test.md --template Thesis.tex --chapter -o test.docx
