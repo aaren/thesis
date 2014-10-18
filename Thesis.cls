@@ -297,15 +297,17 @@
 }
 \newcommand\listsymbolname{Abbreviations}
 \usepackage{longtable}
-\newcommand\listofsymbols[2]{
+
+\newcommand\listofsymbols[1]{
 \btypeout{\listsymbolname}
 \addtotoc{\listsymbolname}
     \chapter*{\listsymbolname
       \@mkboth{
           \MakeUppercase\listsymbolname}{\MakeUppercase\listsymbolname}}
-\begin{longtable}[c]{#1}#2\end{longtable}\par
+`#1'\par
     \cleardoublepage
 }
+
 \newcommand\listconstants{Physical Constants}
 \usepackage{longtable}
 \newcommand\listofconstants[2]{
