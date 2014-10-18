@@ -78,11 +78,15 @@
 \begin{document}
 %
 %% Set up the Title Page
+
 \title{$title$}
-\authors  {\texorpdfstring
-            {\href{$author.email$}{$author.name$}}
-            {$author.name$}
-            }
+\supervisor  {}
+\examiner    {}
+\degree      {}
+\def \univname {\href{$university.url$}{$university.name$}}
+\def \groupname {\href{group.url}{group.name}}
+\def \deptname  {\href{$department.url$}{$department.name$}}
+\authors    {\href{$author.email$}{$author.name$}}
 \addresses  {\groupname\\\deptname\\\univname}  % Do not change this here, instead these must be set in the "Thesis.cls" file, please look through it instead
 \date       {\today}
 \subject    {}

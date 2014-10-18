@@ -155,37 +155,6 @@
 \newcommand*{\FACULTY}[1]{\def\FACNAME{#1}}
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
-\supervisor  {}
-\examiner    {}
-\degree      {}
-\authors     {}
-\university  {\texorpdfstring{\href{http://www.leeds.ac.uk}
-                {The University of Leeds}}
-                {University Name}}
-\UNIVERSITY  {\texorpdfstring{\href{http://www.leeds.ac.uk}
-                {THE UNIVERSITY OF LEEDS}}
-                {UNIVERSITY NAME (IN BLOCK CAPITALS)}}
-\department  {\texorpdfstring{\href{http://www.see.leeds.ac.uk}
-                {School of Earth and Environment}}
-                {Department or School Name}}
-\DEPARTMENT  {\texorpdfstring{\href{http://www.see.leeds.ac.uk}
-                {SCHOOL OF EARTH AND ENVIRONMENT)}}
-                {DEPARTMENT OR SCHOOL NAME (IN BLOCK CAPITALS)}}
-\group       {\texorpdfstring{\href{http://www.see.leeds.ac.uk/research/icas/index.htm}
-                {Institute for Climate and Atmospheric Science}}
-                {Research Group Name}}
-\GROUP       {\texorpdfstring{\href{http://www.see.leeds.ac.uk/research/icas/index.htm}
-                {INSTITUTE FOR CLIMATE AND ATMOSPHERIC SCIENCE)}}
-                {RESEARCH GROUP NAME (IN BLOCK CAPITALS)}}
-\faculty     {\texorpdfstring{\href{Faculty Web Site URL Here (include http://)}
-                {Faculty of Environment}}
-                {Faculty Name}}
-\FACULTY     {\texorpdfstring{\href{Faculty Web Site URL Here (include http://)}
-                {FACULTY OF ENVIRONMENT)}}
-                {FACULTY NAME (IN BLOCK CAPITALS)}}
-\addresses   {}
-\subject     {}
-\keywords    {}
 \renewcommand\maketitle{
   \btypeout{Title Page}
   \hypersetup{pdftitle={\@title}}

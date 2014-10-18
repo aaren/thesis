@@ -15,4 +15,16 @@ declaration: |
 acknowledgements: Lots and lots of people.
 
 copyright: me and the University
+
+university:
+    name: The University of Metadata
+    url: metadata.com
+
+department:
+    name: School of YAML
+    url: yaml.com
+
+group:
+    name: Institute of Strings
+    url: group.com
 ...
