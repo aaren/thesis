@@ -25,7 +25,7 @@ pdf:
         --filter filters.py
 
 docx:
-	pandoc $(metadata) test.md --template Thesis.tex --chapter -o test.docx
+	pandoc $(metadata) test.md -o test.docx
 
 clean:
 	rm test.html test.pdf index.html
