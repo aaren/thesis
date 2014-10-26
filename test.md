@@ -17,4 +17,4 @@ $$
 
 As we can see in equation $\autoref{eq:life}$.
 
-As we can see in equation (#eq:life)
+As we can see in #eq:ref
