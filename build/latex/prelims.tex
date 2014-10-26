@@ -1,0 +1,41 @@
+\Declaration{
+
+\addtocontents{toc}{}  % Add a gap in the Contents, for aesthetics
+
+$declaration$
+
+\copyright $copyright$
+}  % Add a gap in the Contents, for aesthetics
+\pagebreak  % Declaration ended, now start a new page
+\setstretch{1.5} 
+
+\acknowledgements{
+\small 
+$acknowledgements$
+\normalsize
+}
+
+\pagebreak
+\addtotoc{Abstract}  % Add the "Abstract" page entry to the Contents
+\abstract{ %no more than 300 words
+$abstract$
+}
+\addtocontents{toc}{\vspace{2em}}   
+\pagestyle{fancy}  %The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+
+\lhead{\emph{Contents}}  % Set the left side page header to "Contents"
+\setcounter{tocdepth}{1}
+\tableofcontents  % Write out the Table of Contents
+
+\lhead{\emph{List of Figures}}  % Set the left side page header to "List if Figures"
+\listoffigures  % Write out the List of Figures
+
+
+\lhead{\emph{List of Tables}}  % Set the left side page header to "List of Tables"
+\listoftables  % Write out the List of Tables    
+
+\setstretch{1.5}  % Set the line spacing to 1.5, this makes the following tables easier to read
+\clearpage  % Start a new page
+\lhead{\emph{Abbreviations}}  % Set the left side page header to "Abbreviations"
+\listofsymbols{$abbreviations$}  % Include a list of Abbreviations (a table of two columns)
+\addtocontents{toc}{\vspace{2em}}   
