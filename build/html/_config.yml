@@ -1,5 +1,8 @@
 # Dependencies
-markdown:         redcarpet
+gems:
+    - jekyll-pandoc
+
+markdown:         pandoc
 highlighter:      pygments
 
 # Permalinks
