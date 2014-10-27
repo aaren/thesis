@@ -27,4 +27,4 @@ github:
 
 pandoc:
     extensions:
-        - filter: ../filters.py
+        - filter: internal-references
