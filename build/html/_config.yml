@@ -24,3 +24,7 @@ paginate:         5
 
 github:
   repo:           https://github.com/aaren/thesis
+
+pandoc:
+    extensions:
+        - filter: ../filters.py
