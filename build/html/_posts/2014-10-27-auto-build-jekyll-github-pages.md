@@ -25,8 +25,7 @@ Starting from an answer on StackOverflow I wrote this post-commit hook to do
 this (stored at `.git/hooks/post-commit`):
 
 
-```sh
-#!/bin/sh
+```bash
 
 # derived from
 # https://stackoverflow.com/questions/23097489/git-map-directory-to-branch/23097670#23097670
