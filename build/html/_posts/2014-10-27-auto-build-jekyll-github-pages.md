@@ -26,6 +26,7 @@ this (stored at `.git/hooks/post-commit`):
 
 
 ```bash
+#!/bin/bash
 
 # derived from
 # https://stackoverflow.com/questions/23097489/git-map-directory-to-branch/23097670#23097670
