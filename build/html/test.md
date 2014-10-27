@@ -22,4 +22,4 @@ $$
 
 As we can see in equation $\eqref{eq:life}$.
 
-As we can see in #eq:ref
+As we can see in #eq:life, maths is very useful.
