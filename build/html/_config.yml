@@ -3,7 +3,7 @@ gems:
     - jekyll-pandoc
 
 markdown:         pandoc
-highlighter:      pygments
+# highlighter:      pygments  # pandoc does this instead
 
 # Permalinks
 permalink:        pretty
