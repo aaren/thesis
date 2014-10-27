@@ -1,5 +1,0 @@
-- put pandoc template variables in remainder of pre/postlims and thesis
-- can yaml take multi line strings?
-
-- multi document mathjax numbering may be possible with \tag.
-  You still have to use \label, but the \tag sets the displayed number
