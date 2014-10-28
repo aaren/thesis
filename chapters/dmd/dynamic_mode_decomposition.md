@@ -1,3 +1,8 @@
+---
+layout: page
+title: dmd
+---
+
 ## Introduce DMD
 
 ### Build Physical Intuition
