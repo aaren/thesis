@@ -54,7 +54,7 @@ docx:
 	pandoc $(metadata) test.md -o test.docx
 
 clean:
-	rm test.pdf test.tex ${rendered}/*
+	rm ${rendered}/*
 
 serve:
 	cd ${html_build} && jekyll serve --detach --watch && cd -
