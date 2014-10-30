@@ -10,8 +10,11 @@ rendered=./build/rendered
 
 all: html pdf
 
-render:
-	notedown --render test.md --output ${rendered}/test.md
+source_md := $(wildcard chapters/*.md)
+source_nb := $(wildcard chapters/*.ipynb)
+
+render: $(source_md)
+	notedown --render $(source_md) --output ${rendered}/$(basename $(notdir $(source_md))).md
 
 html: render
 	cd ${html_build} && jekyll build && cd -
@@ -51,7 +54,7 @@ docx:
 	pandoc $(metadata) test.md -o test.docx
 
 clean:
-	rm test.pdf test.tex
+	rm test.pdf test.tex ${rendered}/*
 
 serve:
 	cd ${html_build} && jekyll serve --detach --watch && cd -
