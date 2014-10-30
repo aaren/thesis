@@ -3,13 +3,13 @@ layout: page
 title: demo
 ---
 
-Chapter title
-=============
+A markdown thesis
+=================
 
-First bit
+This page is written in markdown.
+
+Equations {#sec:equations}
 ---------
-
-Here are some words about things.
 
 Here is an equation:
 
@@ -20,22 +20,47 @@ $$
 \end{equation}
 $$
 
-Second bit
-----------
+On the web it is rendered with mathjax.
 
-As we can see in #eq:life, maths is very useful.
+
+Internal References
+-------------------
+
+We saw #eq:life in #sec:equations. We're now going to look at
+#fig:attr and #fig:div.
 
 
 Figures
 -------
 
-Let's try and generate a figure from code:
+We can include regular markdown images:
+
+![a normal image](/thesis/figures/image.png)
+
+Or we can make a figure by appending some attributes:
+
+![a figure with attributes](/thesis/figures/image.png){#fig:attr}
+
+This isn't standard markdown (yet), but it is equivalent to putting
+an image inside a div with attributes:
+
+<div class="figure" id=fig:div>
+![a figure in a div](/thesis/figures/image.png)
+</div>
+
+
+### Figures from code
+
+Let's try and generate a figure from code. Here is some python
+setup:
 
 ```{.python .input n=1}
 import matplotlib.pyplot as plt
 import numpy as np
 %matplotlib inline
 ```
+
+and here is the code that generates #fig:test\:
 
 ```{.python .input n=2 #fig:test}
 x = np.linspace(2, 5)
@@ -59,6 +84,3 @@ print "hello from ipython!"
  }
 ]
 ```
-
-
-Here is a reference to #fig:test.
