@@ -1,5 +1,9 @@
 # Ignore pdf builds
 *.pdf
+# Ignore rendered markdown
+build/rendered
+# Ignore figures made from uri
+build/figures
 
 # Ignore docs files
 _gh_pages
