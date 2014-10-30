@@ -15,6 +15,4 @@ $$
 \end{equation}
 $$
 
-As we can see in equation $\autoref{eq:life}$.
-
-As we can see in #eq:ref
+As we can see in #eq:life maths is very useful.
