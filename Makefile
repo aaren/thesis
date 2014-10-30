@@ -1,5 +1,5 @@
-# This is pretty important. Default is /bin/sh
-SHELL := /bin/bash
+SHELL := /bin/bash  # This is pretty important. Default is /bin/sh
+
 metadata=meta.yaml
 
 latex_build=./build/latex
@@ -49,7 +49,7 @@ docx:
 	pandoc $(metadata) test.md -o test.docx
 
 clean:
-	rm test.pdf
+	rm test.pdf test.tex
 
 serve:
 	cd ${html_build} && jekyll serve --detach --watch && cd -
