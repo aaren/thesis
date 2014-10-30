@@ -29,4 +29,7 @@ department:
 group:
     name: Institute of Strings
     url: group.com
+
+thesis_class: build/latex/Thesis
+build: build
 ...
