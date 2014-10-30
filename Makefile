@@ -24,7 +24,7 @@ pdf: render
 				--variable=abbreviations:"$$abbreviations" \
 				--to latex)"; \
 	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
-	pandoc $(metadata) ${rendered}/* -o test.pdf \
+	pandoc $(metadata) ${rendered}/* -o thesis.pdf \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
@@ -38,7 +38,7 @@ tex: render
 				--variable=abbreviations:"$$abbreviations" \
 				--to latex)"; \
 	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
-	pandoc $(metadata) ${rendered}/* -o test.tex \
+	pandoc $(metadata) ${rendered}/* -o thesis.tex \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
