@@ -6,7 +6,9 @@ latex_build=./build/latex
 html_build=./build/html
 rendered=./build/rendered
 
-.PHONY: html pdf clean docx serve
+.PHONY: render all html pdf tex clean docx serve
+
+all: html pdf
 
 render:
 	notedown --render test.md --output ${rendered}/test.md
