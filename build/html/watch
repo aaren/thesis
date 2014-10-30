@@ -1,0 +1,8 @@
+#!/bin/bash
+# pid_file='/tmp/jekyll_thesis_server_pid'
+# test -e $pid_file && jekyll_server_id=$(cat $pid_file) && echo "killing"
+
+# serve_out=$(jekyll serve --watch --detach)
+# jekyll_server_pid=$(echo '$serve_out' | grep -Po "(?<=pid ')([0-9]*)(?=')")
+jekyll serve --watch --detach
+firefox -new-window localhost:4000/thesis/ > /dev/null &
