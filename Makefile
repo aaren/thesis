@@ -8,6 +8,7 @@ html_build=./build/html
 .PHONY: html pdf clean docx serve
 
 html:
+	notedown --render test.md --output ${html_build}/test.md
 	cd ${html_build} && jekyll build && cd -
 
 # remember each line in the recipe is executed in a *new* shell,
