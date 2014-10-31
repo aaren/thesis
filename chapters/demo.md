@@ -35,17 +35,17 @@ Figures
 
 We can include regular markdown images:
 
-![a normal image](/thesis/figures/image.png)
+![a normal image](chapters/figures/image.png)
 
 Or we can make a figure by appending some attributes:
 
-![a figure with attributes](/thesis/figures/image.png){#fig:attr}
+![a figure with attributes](chapters/figures/image.png){#fig:attr}
 
 This isn't standard markdown (yet), but it is equivalent to putting
 an image inside a div with attributes:
 
 <div class="figure" id=fig:div>
-![a figure in a div](/thesis/figures/image.png)
+![a figure in a div](chapters/figures/image.png)
 </div>
 
 
