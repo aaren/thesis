@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Thesis</title>
+ <link href="http://aaren.github.io/atom.xml" rel="self"/>
+ <link href="http://aaren.github.io/"/>
+ <updated>2014-11-03T19:29:43+00:00</updated>
+ <id>http://aaren.github.io</id>
+ <author>
+   <name>Aaron O'Leary</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Automatically building github pages with Jekyll</title>
+   <link href="http://aaren.github.io/2014/10/27/auto-build-jekyll-github-pages/"/>
+   <updated>2014-10-27T00:00:00+00:00</updated>
+   <id>http://aaren.github.io/2014/10/27/auto-build-jekyll-github-pages</id>
+   <content type="html">&lt;p&gt;I'm working with a file structure like this on master:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;thesis/
+    chapters/
+    papers/
+    build/
+        latex/
+        html/  &amp;lt;-- Jekyll project for this site&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I want this site to be published on github pages, but I can't let Github build it for me because I'm using a custom Jekyll config (using pandoc).&lt;/p&gt;
+&lt;p&gt;I also don't want to track the &lt;code&gt;_site&lt;/code&gt; folder in the Jekyll project on my master branch, and I'd like for my site to be automatically built each time I commit to master.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;: I've stopped doing the complicated solution below and now use &lt;code&gt;make pages&lt;/code&gt; with the recipe in my &lt;a href=&quot;https://github.com/aaren/thesis/commit/73b7ed6071fbe3e541943ebba92c55b108587c95&quot;&gt;Makefile&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I found that the code below will actually delete any staged but uncommitted content from master!&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Starting from an answer on StackOverflow I wrote this post-commit hook to do this (stored at &lt;code&gt;.git/hooks/post-commit&lt;/code&gt;):&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;co&quot;&gt;# derived from&lt;/span&gt;
+&lt;span class=&quot;co&quot;&gt;# https://stackoverflow.com/questions/23097489/git-map-directory-to-branch/23097670#23097670&lt;/span&gt;
+
+&lt;span class=&quot;co&quot;&gt;# assumes that you have a jekyll project located in $HTML on master and that&lt;/span&gt;
+&lt;span class=&quot;co&quot;&gt;# you want to build and publish only the &amp;#39;_site&amp;#39; of this project to a gh-pages&lt;/span&gt;
+&lt;span class=&quot;co&quot;&gt;# branch.&lt;/span&gt;
+
+&lt;span class=&quot;co&quot;&gt;# Uses a temporary build branch to remove the need to track _site on master.&lt;/span&gt;
+
+&lt;span class=&quot;ot&quot;&gt;HTML=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;build/html&amp;quot;&lt;/span&gt;    &lt;span class=&quot;co&quot;&gt;# the location of the Jekyll project in master&lt;/span&gt;
+&lt;span class=&quot;ot&quot;&gt;site=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;$HTML&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;/_site/&amp;quot;&lt;/span&gt;  &lt;span class=&quot;co&quot;&gt;# the location of _site&lt;/span&gt;
+
+&lt;span class=&quot;ot&quot;&gt;source=&lt;/span&gt;master   &lt;span class=&quot;co&quot;&gt;# source branch (default master)&lt;/span&gt;
+&lt;span class=&quot;ot&quot;&gt;dest=&lt;/span&gt;gh-pages   &lt;span class=&quot;co&quot;&gt;# destination branch (default gh-pages)&lt;/span&gt;
+&lt;span class=&quot;ot&quot;&gt;build=&lt;/span&gt;_tmp_build     &lt;span class=&quot;co&quot;&gt;# temporary build branch&lt;/span&gt;
+
+&lt;span class=&quot;ot&quot;&gt;current_dir=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;ot&quot;&gt;root_dir=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; rev-parse --show-toplevel&lt;span class=&quot;ot&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${root_dir}&lt;/span&gt;
+
+&lt;span class=&quot;co&quot;&gt;# create temporary build branch&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;_=&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`git&lt;/span&gt; rev-parse -q --verify &lt;span class=&quot;ot&quot;&gt;${build}&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`&lt;/span&gt;; &lt;span class=&quot;kw&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;build branch exists, aborting.&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;exit&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;fi&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; checkout -b &lt;span class=&quot;ot&quot;&gt;${build}&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${HTML}&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;jekyll&lt;/span&gt; build
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${root_dir}&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; add -f &lt;span class=&quot;ot&quot;&gt;${site}&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; commit -m &lt;span class=&quot;st&quot;&gt;&amp;quot;built site&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;ghpages=&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`git&lt;/span&gt; rev-parse -q --verify &lt;span class=&quot;ot&quot;&gt;${dest}&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`&lt;/span&gt;; &lt;span class=&quot;kw&quot;&gt;then&lt;/span&gt;
+        &lt;span class=&quot;co&quot;&gt;# there&amp;#39;s already a branch, don&amp;#39;t double-commit a tree&lt;/span&gt;
+        &lt;span class=&quot;ot&quot;&gt;committed=&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`git&lt;/span&gt; rev-parse -q --verify &lt;span class=&quot;ot&quot;&gt;${dest}&lt;/span&gt;^&lt;span class=&quot;dt&quot;&gt;{tree}&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`&lt;/span&gt;
+        &lt;span class=&quot;ot&quot;&gt;current=&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`git&lt;/span&gt; rev-parse -q --verify &lt;span class=&quot;ot&quot;&gt;${build}&lt;/span&gt;:&lt;span class=&quot;ot&quot;&gt;${site}&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;test&lt;/span&gt; x&lt;span class=&quot;ot&quot;&gt;$current&lt;/span&gt; = x&lt;span class=&quot;ot&quot;&gt;$committed&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;exit&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;fi&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;commit=&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`git&lt;/span&gt; commit-tree &lt;span class=&quot;ot&quot;&gt;${ghpages:+&lt;/span&gt;-p &lt;span class=&quot;ot&quot;&gt;$ghpages}&lt;/span&gt; -m &lt;span class=&quot;st&quot;&gt;&amp;quot;updating &lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;$dest&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${build}&lt;/span&gt;:&lt;span class=&quot;ot&quot;&gt;${site}&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;`&lt;/span&gt;; &lt;span class=&quot;kw&quot;&gt;then&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; update-ref refs/heads/&lt;span class=&quot;ot&quot;&gt;${dest}&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${commit}&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;fi&lt;/span&gt;
+
+
+&lt;span class=&quot;co&quot;&gt;# clean up&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; checkout &lt;span class=&quot;ot&quot;&gt;${source}&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; branch -D &lt;span class=&quot;ot&quot;&gt;${build}&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${current_dir}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now when I commit a change to master, my site gets built and pushed to gh-pages.&lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>
