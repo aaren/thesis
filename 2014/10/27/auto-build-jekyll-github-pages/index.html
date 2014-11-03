@@ -108,7 +108,19 @@
 <p>I want this site to be published on github pages, but I can't let Github build it for me because I'm using a custom Jekyll config (using pandoc).</p>
 <p>I also don't want to track the <code>_site</code> folder in the Jekyll project on my master branch, and I'd like for my site to be automatically built each time I commit to master.</p>
 <hr />
-<p><strong>update</strong>: I've stopped doing the complicated solution below and now use <code>make pages</code> with the recipe in my <a href="https://github.com/aaren/thesis/commit/73b7ed6071fbe3e541943ebba92c55b108587c95">Makefile</a>.</p>
+<p><strong>update</strong>: I've stopped doing the complicated solution below and now use <code>make pages</code> with the following recipe in my Makefile:</p>
+<pre class="make"><code># build _site and push diff to gh-pages branch
+# using a temporary git repo to rebase the changes onto
+pages: html
+    root_dir=$$(git rev-parse --show-toplevel) &amp;&amp; \
+    tmp_dir=$$(mktemp -d) &amp;&amp; \
+    cd $${tmp_dir} &amp;&amp; git init &amp;&amp; \
+    git remote add origin $${root_dir} &amp;&amp; \
+    git pull origin gh-pages &amp;&amp; \
+    rsync -av $${root_dir}/${html_build}/_site/ . &amp;&amp; \
+    git add . &amp;&amp; git commit -m &quot;update gh-pages&quot; &amp;&amp; \
+    git push origin master:gh-pages &amp;&amp; \
+    cd $${root_dir}</code></pre>
 <p>I found that the code below will actually delete any staged but uncommitted content from master!</p>
 <hr />
 <p>Starting from an answer on StackOverflow I wrote this post-commit hook to do this (stored at <code>.git/hooks/post-commit</code>):</p>

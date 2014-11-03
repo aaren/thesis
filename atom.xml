@@ -4,7 +4,7 @@
  <title>Thesis</title>
  <link href="http://aaren.github.io/atom.xml" rel="self"/>
  <link href="http://aaren.github.io/"/>
- <updated>2014-11-03T19:29:43+00:00</updated>
+ <updated>2014-11-03T19:41:38+00:00</updated>
  <id>http://aaren.github.io</id>
  <author>
    <name>Aaron O'Leary</name>
@@ -27,7 +27,19 @@
 &lt;p&gt;I want this site to be published on github pages, but I can't let Github build it for me because I'm using a custom Jekyll config (using pandoc).&lt;/p&gt;
 &lt;p&gt;I also don't want to track the &lt;code&gt;_site&lt;/code&gt; folder in the Jekyll project on my master branch, and I'd like for my site to be automatically built each time I commit to master.&lt;/p&gt;
 &lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;: I've stopped doing the complicated solution below and now use &lt;code&gt;make pages&lt;/code&gt; with the recipe in my &lt;a href=&quot;https://github.com/aaren/thesis/commit/73b7ed6071fbe3e541943ebba92c55b108587c95&quot;&gt;Makefile&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;: I've stopped doing the complicated solution below and now use &lt;code&gt;make pages&lt;/code&gt; with the following recipe in my Makefile:&lt;/p&gt;
+&lt;pre class=&quot;make&quot;&gt;&lt;code&gt;# build _site and push diff to gh-pages branch
+# using a temporary git repo to rebase the changes onto
+pages: html
+    root_dir=$$(git rev-parse --show-toplevel) &amp;amp;&amp;amp; \
+    tmp_dir=$$(mktemp -d) &amp;amp;&amp;amp; \
+    cd $${tmp_dir} &amp;amp;&amp;amp; git init &amp;amp;&amp;amp; \
+    git remote add origin $${root_dir} &amp;amp;&amp;amp; \
+    git pull origin gh-pages &amp;amp;&amp;amp; \
+    rsync -av $${root_dir}/${html_build}/_site/ . &amp;amp;&amp;amp; \
+    git add . &amp;amp;&amp;amp; git commit -m &amp;quot;update gh-pages&amp;quot; &amp;amp;&amp;amp; \
+    git push origin master:gh-pages &amp;amp;&amp;amp; \
+    cd $${root_dir}&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;I found that the code below will actually delete any staged but uncommitted content from master!&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;Starting from an answer on StackOverflow I wrote this post-commit hook to do this (stored at &lt;code&gt;.git/hooks/post-commit&lt;/code&gt;):&lt;/p&gt;
