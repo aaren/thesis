@@ -2,11 +2,11 @@ SHELL := /bin/bash  # This is pretty important. Default is /bin/sh
 
 metadata=meta.yaml
 
-latex_build=./build/latex
-html_build=./build/html
-rendered=./build/rendered
+latex_build=build/latex
+html_build=build/html
+rendered=build/rendered
 
-.PHONY: render all html pdf tex clean docx serve
+.PHONY: render all html pdf tex clean docx serve pages
 
 all: html pdf
 
@@ -18,6 +18,19 @@ render: $(source_md)
 
 html: render
 	cd ${html_build} && jekyll build && cd -
+
+# build _site and push diff to gh-pages branch
+# using a temporary git repo to rebase the changes onto
+pages: html
+	root_dir=$$(git rev-parse --show-toplevel) && \
+	tmp_dir=$$(mktemp -d) && \
+	cd $${tmp_dir} && git init && \
+	git remote add origin $${root_dir} && \
+	git pull origin gh-pages && \
+	rsync -av $${root_dir}/${html_build}/_site/ . && \
+	git add . && git commit -m "update gh-pages" && \
+	git push origin master:gh-pages && \
+	cd $${root_dir}
 
 # remember each line in the recipe is executed in a *new* shell,
 # so if we want to pass variables around we have to make a long
