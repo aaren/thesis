@@ -21,6 +21,31 @@ I also don't want to track the `_site` folder in the Jekyll project on my
 master branch, and I'd like for my site to be automatically built each time
 I commit to master.
 
+*****
+
+**update**: I've stopped doing the complicated solution below and now use `make pages`
+with the following recipe in my Makefile:
+
+```make
+# build _site and push diff to gh-pages branch
+# using a temporary git repo to rebase the changes onto
+pages: html
+	root_dir=$$(git rev-parse --show-toplevel) && \
+	tmp_dir=$$(mktemp -d) && \
+	cd $${tmp_dir} && git init && \
+	git remote add origin $${root_dir} && \
+	git pull origin gh-pages && \
+	rsync -av $${root_dir}/${html_build}/_site/ . && \
+	git add . && git commit -m "update gh-pages" && \
+	git push origin master:gh-pages && \
+	cd $${root_dir}
+```
+
+I found that the code below will actually delete any staged but
+uncommitted content from master!
+
+*****
+
 Starting from an answer on StackOverflow I wrote this post-commit hook to do
 this (stored at `.git/hooks/post-commit`):
 
