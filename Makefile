@@ -27,8 +27,9 @@ pages: html
 	cd $${tmp_dir} && git init && \
 	git remote add origin $${root_dir} && \
 	git pull origin gh-pages && \
+	git rm -rf --cached * && \
 	rsync -av $${root_dir}/${html_build}/_site/ . && \
-	git add . && git commit -m "update gh-pages" && \
+	git add -A && git commit -m "update gh-pages" && \
 	git push origin master:gh-pages && \
 	cd $${root_dir}
 
