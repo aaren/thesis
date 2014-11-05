@@ -14,8 +14,13 @@ source_md := $(wildcard chapters/*.md)
 source_nb := $(wildcard chapters/*.ipynb)
 
 render: $(source_md) $(source_nb)
-	mkdir -p ${rendered}
-	notedown --render $(source_md) --output ${rendered}/$(basename $(notdir $(source_md))).md
+	@mkdir -p ${rendered}
+ifneq ("$(source_md)", "")
+	notedown $(source_md) --render --output ${rendered}/$(basename $(notdir $(source_md))).md
+endif
+ifneq ("$(source_nb)", "")
+	notedown $(source_nb) --render --output ${rendered}/$(basename $(notdir $(source_nb))).md
+endif
 
 html: render
 	@echo "Building html..."
