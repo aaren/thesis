@@ -1,5 +1,42 @@
 - multi document mathjax numbering may be possible with \tag.
   You still have to use \label, but the \tag sets the displayed number
 
-- rendering notebooks: either 1) use notedown --render or 2) make a pandoc
-  filter to process the output json.
+- write a 'chapter' layout for jekyll that goes in a 'chapters' collection
+  http://jekyllrb.com/docs/collections/
+  http://www.sitepoint.com/getting-started-jekyll-collections/
+
+- use the 'chapter' layout to let us have a sidebar that has chapters
+  inside a sub menu
+
+- use http://www.thecssninja.com/css/css-tree-menu to allow css sub menus
+  e.g.
+  Home
+  Chapters
+    Introduction
+    Lit Review
+    Methods
+        Rotation Correction
+        Harmonic Inversion
+    Conclusions
+  About
+  Github
+
+- show / hide code that makes figures. do this with pure css
+  http://demosthenes.info/blog/506/HTML5-Window-Toggle-Events-In-Pure-CSS3
+
+  also
+  https://stackoverflow.com/questions/17042279/show-hide-div-with-css-only
+  https://stackoverflow.com/questions/22318248/on-click-hide-this-button-link-pure-css
+  http://koen.kivits.com/articles/pure-css-menu/
+
+- inline comments? https://github.com/tsi/inlineDisqussions
+
+- lossless image reduction? https://github.com/grosser/smusher
+
+- images floating at side of text? e.g. http://www.wired.co.uk/magazine/archive/2014/01/test/super-simple-phones
+  also see https://github.com/sjl/stevelosh/blob/c3e7f3901a6a90222dd72c5ee8ef49e42de31531/media/js/sjl.js
+  for scrolling headers
+
+- fix svg data uris - http://r.va.gg/2012/05/data-uri-svg.html
+
+- makefile hints: http://skramm.blogspot.co.uk/2012/04/gnu-make-and-foreach-function.html
