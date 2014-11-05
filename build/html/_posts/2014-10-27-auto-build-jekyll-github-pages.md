@@ -27,18 +27,21 @@ I commit to master.
 with the following recipe in my Makefile:
 
 ```make
+html: render
+	cd ${html_build} && jekyll build && cd -
+
 # build _site and push diff to gh-pages branch
 # using a temporary git repo to rebase the changes onto
 pages: html
 	root_dir=$$(git rev-parse --show-toplevel) && \
 	tmp_dir=$$(mktemp -d) && \
-	cd $${tmp_dir} && git init && \
+	cd $${tmp_dir} && git init --quiet && \
 	git remote add origin $${root_dir} && \
-	git pull origin gh-pages && \
-	rsync -av $${root_dir}/${html_build}/_site/ . && \
-	git add . && git commit -m "update gh-pages" && \
-	git push origin master:gh-pages && \
-	cd $${root_dir}
+	git pull --quiet origin gh-pages && \
+	git rm -rf --cached --quiet * && \
+	rsync -a $${root_dir}/${html_build}/_site/ . && \
+	git add -A && git commit --quiet -m "update gh-pages" && \
+	git push --quiet origin master:gh-pages
 ```
 
 I found that the code below will actually delete any staged but
