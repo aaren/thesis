@@ -119,16 +119,20 @@
 <p>I also don't want to track the <code>_site</code> folder in the Jekyll project on my master branch, and I'd like for my site to be automatically built each time I commit to master.</p>
 <hr />
 <p><strong>update</strong>: I've stopped doing the complicated solution below and now use <code>make pages</code> with the following recipe in my Makefile:</p>
-<pre class="make"><code># build _site and push diff to gh-pages branch
+<pre class="make"><code>html: render
+    cd ${html_build} &amp;&amp; jekyll build &amp;&amp; cd -
+
+# build _site and push diff to gh-pages branch
 # using a temporary git repo to rebase the changes onto
 pages: html
     root_dir=$$(git rev-parse --show-toplevel) &amp;&amp; \
     tmp_dir=$$(mktemp -d) &amp;&amp; \
-    cd $${tmp_dir} &amp;&amp; git init &amp;&amp; \
+    cd $${tmp_dir} &amp;&amp; git init --quiet &amp;&amp; \
     git remote add origin $${root_dir} &amp;&amp; \
-    git pull origin gh-pages &amp;&amp; \
-    rsync -av $${root_dir}/${html_build}/_site/ . &amp;&amp; \
-    git add . &amp;&amp; git commit -m &quot;update gh-pages&quot; &amp;&amp; \
+    git pull --quiet origin gh-pages &amp;&amp; \
+    git rm -rf --cached --quiet * &amp;&amp; \
+    rsync -a $${root_dir}/${html_build}/_site/ . &amp;&amp; \
+    git add -A &amp;&amp; git commit -m &quot;update gh-pages&quot; &amp;&amp; \
     git push origin master:gh-pages &amp;&amp; \
     cd $${root_dir}</code></pre>
 <p>I found that the code below will actually delete any staged but uncommitted content from master!</p>

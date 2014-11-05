@@ -4,7 +4,7 @@
  <title>Thesis</title>
  <link href="http://aaren.github.io/atom.xml" rel="self"/>
  <link href="http://aaren.github.io/"/>
- <updated>2014-11-05T09:54:02+00:00</updated>
+ <updated>2014-11-05T10:29:02+00:00</updated>
  <id>http://aaren.github.io</id>
  <author>
    <name>Aaron O'Leary</name>
@@ -28,16 +28,20 @@
 &lt;p&gt;I also don't want to track the &lt;code&gt;_site&lt;/code&gt; folder in the Jekyll project on my master branch, and I'd like for my site to be automatically built each time I commit to master.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;: I've stopped doing the complicated solution below and now use &lt;code&gt;make pages&lt;/code&gt; with the following recipe in my Makefile:&lt;/p&gt;
-&lt;pre class=&quot;make&quot;&gt;&lt;code&gt;# build _site and push diff to gh-pages branch
+&lt;pre class=&quot;make&quot;&gt;&lt;code&gt;html: render
+    cd ${html_build} &amp;amp;&amp;amp; jekyll build &amp;amp;&amp;amp; cd -
+
+# build _site and push diff to gh-pages branch
 # using a temporary git repo to rebase the changes onto
 pages: html
     root_dir=$$(git rev-parse --show-toplevel) &amp;amp;&amp;amp; \
     tmp_dir=$$(mktemp -d) &amp;amp;&amp;amp; \
-    cd $${tmp_dir} &amp;amp;&amp;amp; git init &amp;amp;&amp;amp; \
+    cd $${tmp_dir} &amp;amp;&amp;amp; git init --quiet &amp;amp;&amp;amp; \
     git remote add origin $${root_dir} &amp;amp;&amp;amp; \
-    git pull origin gh-pages &amp;amp;&amp;amp; \
-    rsync -av $${root_dir}/${html_build}/_site/ . &amp;amp;&amp;amp; \
-    git add . &amp;amp;&amp;amp; git commit -m &amp;quot;update gh-pages&amp;quot; &amp;amp;&amp;amp; \
+    git pull --quiet origin gh-pages &amp;amp;&amp;amp; \
+    git rm -rf --cached --quiet * &amp;amp;&amp;amp; \
+    rsync -a $${root_dir}/${html_build}/_site/ . &amp;amp;&amp;amp; \
+    git add -A &amp;amp;&amp;amp; git commit -m &amp;quot;update gh-pages&amp;quot; &amp;amp;&amp;amp; \
     git push origin master:gh-pages &amp;amp;&amp;amp; \
     cd $${root_dir}&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;I found that the code below will actually delete any staged but uncommitted content from master!&lt;/p&gt;
