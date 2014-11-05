@@ -1,10 +1,12 @@
 SHELL := /bin/bash  # This is pretty important. Default is /bin/sh
 
-metadata=meta.yaml
+metadata = meta.yaml
 
-latex_build=build/latex
-html_build=build/html
-rendered=build/rendered
+latex_build = build/latex
+html_build = build/html
+rendered = build/rendered
+
+output_pdf = thesis.pdf
 
 .PHONY: render all html pdf tex clean docx serve pages
 
@@ -48,7 +50,7 @@ pages: html
 # so if we want to pass variables around we have to make a long
 # single line command.
 pdf: render
-	@echo "Building pdf..."
+	@echo "Building ${output_pdf}..."
 	@mkdir -p build/figures
 	@abbreviations=$$(pandoc abbreviations.md --to latex); \
 	prelims="$$(pandoc $(metadata) \
@@ -56,7 +58,7 @@ pdf: render
 				--variable=abbreviations:"$$abbreviations" \
 				--to latex)"; \
 	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
-	pandoc $(metadata) ${rendered}/* -o thesis.pdf \
+	pandoc $(metadata) ${rendered}/* -o ${output_pdf} \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
