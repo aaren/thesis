@@ -28,3 +28,8 @@ github:
 pandoc:
     extensions:
         - filter: ./filters.py
+
+collections:
+    chapters:
+        output: true
+        permalink: /:collection/:title/   # trailing slash is important!
