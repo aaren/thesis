@@ -20,8 +20,10 @@ source_nb := $(wildcard chapters/*.ipynb)
 # and the symlinking into the jekyll build
 
 render: ${source_md} ${source_nb}
-	@echo "Rendering notebooks..."
 	@mkdir -p ${rendered}
+	@echo "Copying images..."
+	@rsync -a chapters/figures build/rendered/
+	@echo "Rendering notebooks..."
 ifneq ("${source_md}", "")
 	@$(foreach f, ${source_md}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
 endif
@@ -59,7 +61,7 @@ pdf: render
 				--variable=abbreviations:"$$abbreviations" \
 				--to latex)"; \
 	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
-	pandoc $(metadata) ${rendered}/* -o ${output_pdf} \
+	pandoc $(metadata) ${rendered}/*.md -o ${output_pdf} \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
@@ -73,7 +75,7 @@ tex: render
 				--variable=abbreviations:"$$abbreviations" \
 				--to latex)"; \
 	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
-	pandoc $(metadata) ${rendered}/* -o thesis.tex \
+	pandoc $(metadata) ${rendered}/*.md -o thesis.tex \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
@@ -84,7 +86,7 @@ docx:
 	pandoc $(metadata) test.md -o test.docx
 
 clean:
-	rm ${rendered}/*
+	rm -rf ${rendered}/*
 
 serve:
 	cd ${html_build} && jekyll serve --detach --watch && cd -

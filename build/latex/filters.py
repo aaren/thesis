@@ -1,3 +1,4 @@
+import os
 import re
 import base64
 
@@ -53,7 +54,18 @@ def save_uri(key, value, format, metadata):
         return pf.Div(attr, [pf.Plain([pf.Image(caption, (fname, title))])])
 
 
+def make_site_links(key, value, format, metadata):
+    """Converts image links from file-system-relative to
+    site-relative.
+    """
+    if key == 'Image':
+        caption, (link, title) = value
+        link = os.path.join('chapters/', link)
+        if os.path.isfile(link):
+            return pf.Image(caption, (link, title))
+
+
 if __name__ == '__main__':
     refman = ir.ReferenceManager()
-    ir.toJSONFilter([save_uri, suppress_input_cells]
+    ir.toJSONFilter([make_site_links, save_uri, suppress_input_cells]
                     + refman.reference_filter + [raw_equations])

@@ -10,10 +10,12 @@ def make_site_links(key, value, format, metadata):
     """Converts image links from file-system-relative to
     site-relative.
     """
-    if key == 'Image' and os.path.isfile(value[1][0]):
+    if key == 'Image':
         caption, (link, title) = value
-        link = '/thesis/' + link
-        return pf.Image(caption, (link, title))
+        link = os.path.join('chapters/', link)
+        if os.path.isfile(link):
+            link = os.path.join('/thesis', link)
+            return pf.Image(caption, (link, title))
 
 
 if __name__ == '__main__':
