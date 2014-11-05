@@ -5,6 +5,14 @@
 
   Will require multiple passes as well??
 
+  Or we can just do a first pass over all of the content, only consuming
+  references and saving this to disk (json), then telling the reference manager
+  to look for this pre-existing json on the second pass (done with jekyll).
+  Obv requires changes to the reference manager. Start the first pass manually,
+
+  unless jekyll has a way to trigger a pre-processor?
+  It does, through plugins - requires writing some ruby.
+
 - multi document mathjax numbering may be possible with \tag.
   You still have to use \label, but the \tag sets the displayed number
 
