@@ -1,7 +1,12 @@
+- multi page referencing in html output. need to be able to cross reference and
+  have figure numbers working properly (e.g. figure 1.2 in chapter 1, figure
+  2.2 in chapter 2). Will probably need some state that is saved to disk by the
+  reference manager.
+
 - multi document mathjax numbering may be possible with \tag.
   You still have to use \label, but the \tag sets the displayed number
 
-- write a 'chapter' layout for jekyll that goes in a 'chapters' collection
+- [x] write a 'chapter' layout for jekyll that goes in a 'chapters' collection
   http://jekyllrb.com/docs/collections/
   http://www.sitepoint.com/getting-started-jekyll-collections/
 
