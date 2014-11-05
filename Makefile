@@ -13,31 +13,34 @@ all: html pdf
 source_md := $(wildcard chapters/*.md)
 source_nb := $(wildcard chapters/*.ipynb)
 
-render: $(source_md)
+render: $(source_md) $(source_nb)
+	mkdir -p ${rendered}
 	notedown --render $(source_md) --output ${rendered}/$(basename $(notdir $(source_md))).md
 
 html: render
-	cd ${html_build} && jekyll build && cd -
+	@echo "Building html..."
+	@cd ${html_build} && jekyll build && cd -
 
 # build _site and push diff to gh-pages branch
 # using a temporary git repo to rebase the changes onto
 pages: html
-	root_dir=$$(git rev-parse --show-toplevel) && \
+	@echo "Building gh-pages..."
+	@root_dir=$$(git rev-parse --show-toplevel) && \
 	tmp_dir=$$(mktemp -d) && \
-	cd $${tmp_dir} && git init && \
+	cd $${tmp_dir} && git init --quiet && \
 	git remote add origin $${root_dir} && \
-	git pull origin gh-pages && \
-	git rm -rf --cached * && \
-	rsync -av $${root_dir}/${html_build}/_site/ . && \
-	git add -A && git commit -m "update gh-pages" && \
-	git push origin master:gh-pages && \
-	cd $${root_dir}
+	git pull --quiet origin gh-pages && \
+	git rm -rf --cached --quiet * && \
+	rsync -a $${root_dir}/${html_build}/_site/ . && \
+	git add -A && git commit --quiet -m "update gh-pages" && \
+	git push --quiet origin master:gh-pages
 
 # remember each line in the recipe is executed in a *new* shell,
 # so if we want to pass variables around we have to make a long
 # single line command.
 pdf: render
-	abbreviations=$$(pandoc abbreviations.md --to latex); \
+	@echo "Building pdf..."
+	@abbreviations=$$(pandoc abbreviations.md --to latex); \
 	prelims="$$(pandoc $(metadata) \
 				--template ${latex_build}/prelims.tex \
 				--variable=abbreviations:"$$abbreviations" \
