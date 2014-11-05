@@ -12,9 +12,9 @@ def make_site_links(key, value, format, metadata):
     """
     if key == 'Image':
         caption, (link, title) = value
-        link = os.path.join('chapters/', link)
-        if os.path.isfile(link):
-            link = os.path.join('/thesis', link)
+        test_link = os.path.join('_chapters/', link)
+        if os.path.isfile(test_link):
+            link = os.path.join('/thesis/chapters', link)
             return pf.Image(caption, (link, title))
 
 
