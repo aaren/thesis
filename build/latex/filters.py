@@ -55,5 +55,5 @@ def save_uri(key, value, format, metadata):
 
 if __name__ == '__main__':
     refman = ir.ReferenceManager()
-    ir.toJSONFilter([save_uri, raw_equations, suppress_input_cells]
-                    + refman.reference_filter)
+    ir.toJSONFilter([save_uri, suppress_input_cells]
+                    + refman.reference_filter + [raw_equations])
