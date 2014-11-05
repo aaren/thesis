@@ -60,7 +60,9 @@ pdf: render
 				--template ${latex_build}/prelims.tex \
 				--variable=abbreviations:"$$abbreviations" \
 				--to latex)"; \
-	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
+	postlims="$$(pandoc $(metadata) \
+	             --template ${latex_build}/postlims.tex \
+				 --to latex)"; \
 	pandoc $(metadata) ${rendered}/*.md -o ${output_pdf} \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
