@@ -20,12 +20,13 @@ source_nb := $(wildcard chapters/*.ipynb)
 # and the symlinking into the jekyll build
 
 render: ${source_md} ${source_nb}
+	@echo "Rendering notebooks..."
 	@mkdir -p ${rendered}
 ifneq ("${source_md}", "")
-	$(foreach f, ${source_md}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
+	@$(foreach f, ${source_md}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
 endif
 ifneq ("$(source_nb)", "")
-	$(foreach f, ${source_nb}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
+	@$(foreach f, ${source_nb}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
 endif
 
 html: render
