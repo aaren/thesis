@@ -19,13 +19,13 @@ source_nb := $(wildcard chapters/*.ipynb)
 # but this might mean reconfiguring the output destination from render
 # and the symlinking into the jekyll build
 
-render: $(source_md) $(source_nb)
+render: ${source_md} ${source_nb}
 	@mkdir -p ${rendered}
-ifneq ("$(source_md)", "")
-	notedown $(source_md) --render --output ${rendered}/$(basename $(notdir $(source_md))).md
+ifneq ("${source_md}", "")
+	$(foreach f, ${source_md}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
 endif
 ifneq ("$(source_nb)", "")
-	notedown $(source_nb) --render --output ${rendered}/$(basename $(notdir $(source_nb))).md
+	$(foreach f, ${source_nb}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
 endif
 
 html: render
