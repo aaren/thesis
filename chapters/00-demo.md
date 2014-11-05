@@ -60,7 +60,7 @@ import numpy as np
 %matplotlib inline
 ```
 
-and here is the code that generates #fig:test\:
+and here is the code that generates #fig:test|:
 
 ```{.python .input n=2 #fig:test}
 x = np.linspace(2, 5)
