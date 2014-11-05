@@ -10,7 +10,7 @@ permalink:        pretty
 relative_permalinks: true
 
 # Setup
-title:            'Thesis' 
+title:            "Aaron O'Leary PhD Thesis"
 tagline:          'web version'
 description:      'Gravity currents, non-linear waves, turbulence and stratification.'
 url:              http://aaren.github.io
