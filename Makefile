@@ -12,6 +12,10 @@ all: html pdf
 
 source_md := $(wildcard chapters/*.md)
 source_nb := $(wildcard chapters/*.ipynb)
+# later we might want to use this:
+# source_md = $(shell find chapters -name '*.md' | sort)
+# but this might mean reconfiguring the output destination from render
+# and the symlinking into the jekyll build
 
 render: $(source_md) $(source_nb)
 	@mkdir -p ${rendered}
