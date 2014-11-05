@@ -132,7 +132,7 @@ pages: html
     git pull --quiet origin gh-pages &amp;&amp; \
     git rm -rf --cached --quiet * &amp;&amp; \
     rsync -a $${root_dir}/${html_build}/_site/ . &amp;&amp; \
-    git add -A &amp;&amp; git commit -m &quot;update gh-pages&quot; &amp;&amp; \
+    git add -A &amp;&amp; git commit --quiet -m &quot;update gh-pages&quot; &amp;&amp; \
     git push --quiet origin master:gh-pages &amp;&amp; \
     cd $${root_dir}</code></pre>
 <p>I found that the code below will actually delete any staged but uncommitted content from master!</p>
