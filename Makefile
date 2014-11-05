@@ -45,6 +45,7 @@ pages: html
 # single line command.
 pdf: render
 	@echo "Building pdf..."
+	@mkdir -p build/figures
 	@abbreviations=$$(pandoc abbreviations.md --to latex); \
 	prelims="$$(pandoc $(metadata) \
 				--template ${latex_build}/prelims.tex \
