@@ -4,7 +4,7 @@
  <title>Thesis</title>
  <link href="http://aaren.github.io/atom.xml" rel="self"/>
  <link href="http://aaren.github.io/"/>
- <updated>2014-11-05T10:31:09+00:00</updated>
+ <updated>2014-11-05T10:32:22+00:00</updated>
  <id>http://aaren.github.io</id>
  <author>
    <name>Aaron O'Leary</name>
@@ -42,8 +42,7 @@ pages: html
     git rm -rf --cached --quiet * &amp;amp;&amp;amp; \
     rsync -a $${root_dir}/${html_build}/_site/ . &amp;amp;&amp;amp; \
     git add -A &amp;amp;&amp;amp; git commit --quiet -m &amp;quot;update gh-pages&amp;quot; &amp;amp;&amp;amp; \
-    git push --quiet origin master:gh-pages &amp;amp;&amp;amp; \
-    cd $${root_dir}&lt;/code&gt;&lt;/pre&gt;
+    git push --quiet origin master:gh-pages&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;I found that the code below will actually delete any staged but uncommitted content from master!&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;Starting from an answer on StackOverflow I wrote this post-commit hook to do this (stored at &lt;code&gt;.git/hooks/post-commit&lt;/code&gt;):&lt;/p&gt;
