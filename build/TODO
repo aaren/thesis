@@ -3,6 +3,8 @@
   2.2 in chapter 2). Will probably need some state that is saved to disk by the
   reference manager.
 
+  Will require multiple passes as well??
+
 - multi document mathjax numbering may be possible with \tag.
   You still have to use \label, but the \tag sets the displayed number
 
