@@ -39,7 +39,7 @@ def save_uri(key, value, format, metadata):
 
         global image_count
         image_count += 1
-        fname = 'build/figures/000{}.png'.format(image_count)
+        fname = 'build/figures/{i:05d}.png'.format(i=image_count)
 
         match = png_uri.search(uri)
         if match:
