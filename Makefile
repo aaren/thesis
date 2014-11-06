@@ -70,6 +70,14 @@ pdf: render
 		--variable=postlims:"$$postlims" \
         --filter ${latex_build}/filters.py
 
+chapter: render
+	pandoc $(metadata) ${rendered}/00-demo.md -o chapter.pdf \
+		--template ${latex_build}/Thesis.tex \
+		--chapter \
+		--variable=prelims:"$$prelims" \
+		--variable=postlims:"$$postlims" \
+        --filter ${latex_build}/filters.py
+
 tex: render
 	abbreviations=$$(pandoc abbreviations.md --to latex); \
 	prelims="$$(pandoc $(metadata) \
