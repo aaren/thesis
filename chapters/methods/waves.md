@@ -1,4 +1,4 @@
-```{.python .input n=1}
+```{.python .input  n=1}
 import numpy as np
 import matplotlib.pyplot as plt
 %matplotlib inline
@@ -14,7 +14,7 @@ Removing waves from lab data
 
 Wave extraction:
 
-```{.python .input n=2}
+```{.python .input  n=2}
 r = g.ProcessedRun(cache_path=g.default_processed + 'r14_01_14a.hdf5')
 
 gobbler = g.turbulence.WaveGobbler(r)
@@ -22,7 +22,7 @@ simple_waves = gobbler.get_waves(r.U)
 clever_waves = gobbler.get_clever_waves(r.U)
 ```
 
-```{.python .input n=41}
+```{.python .input  n=41}
 fig, ax = plt.subplots(nrows=6, figsize=(12, 6))
 
 sample = np.s_[:, 10, :]
@@ -80,10 +80,6 @@ ax[5].set_ylabel('horizontal')
 ```
 
 
-```python
-
-```
-
 ### Explanation
 
 Lab data contain waves, which are complicating the frequency
@@ -95,7 +91,7 @@ the data and recover wave free data.
 
 What do the waves look like?
 
-```python
+```{.python .input}
 index = 'r14_01_14a'
 cache_path = g.default_processed + index + '.hdf5'
 r = g.ProcessedRun(cache_path=cache_path)
@@ -108,7 +104,7 @@ zf = r.Zf[:, 0, :]
 
 As we might expect, there are no waves in the mean front relative data:
 
-```python
+```{.python .input}
 mean = np.mean(r.Uf[...], axis=1)
 plt.contourf(tf, zf, mean, levels=u_levels)
 ```
@@ -116,7 +112,7 @@ plt.contourf(tf, zf, mean, levels=u_levels)
 If we subtract the mean from the data and look at a single vertical
 slice we can see waves:
 
-```python
+```{.python .input}
 mean_subtracted = r.Uf[...] - mean[..., None, ...]
 c = plt.contourf(tf, zf, mean_subtracted[:, 30, :], 100)
 ```
@@ -125,7 +121,7 @@ We can see that the waves are present throughout the data. In the
 non turbulent region outside of the current we can see them quite
 well:
 
-```python
+```{.python .input}
 c = plt.contourf(tf[-5:], zf[-5:], mean_subtracted[-5:, 30, :], 100)
 wave_levels = c.levels
 ```
@@ -133,7 +129,7 @@ wave_levels = c.levels
 Plotting in the lab frame shows that these waves are fast (nearly
 vertical in $(t, x)$):
 
-```python
+```{.python .input}
 x = r.X[0, :, :]
 t = r.T[0, :, :]
 plt.contourf(t, x, np.mean(r.U[-10:, :, :], axis=0), levels=wave_levels)
@@ -152,7 +148,7 @@ velocities.
 
 We need to modify the front transform routines a bit:
 
-```python
+```{.python .input}
 r.dt = 0.01
 r.ft = r.ft[...]
 transformer = g.FrontTransformer(r)
@@ -173,7 +169,7 @@ mean_sub_u = r.U[...] - trans_mean_uf
 waves_xz = np.mean(np.mean(mean_sub_u, axis=0, keepdims=True), axis=1, keepdims=True)
 ```
 
-```python
+```{.python .input}
 plt.contourf(waves_xz, 100)
 ```
 
@@ -181,7 +177,7 @@ Looking at this signal, it seems that the waves might be fast rather
 than stationary. Is there a wave frame? What speed should these
 waves have?
 
-```python
+```{.python .input}
 sub = np.s_[20, :, 250: 2000]
 plt.contourf(r.T[sub], r.X[sub], mean_sub_u[sub], 100)
 ```
@@ -198,7 +194,7 @@ coming from the current.
 
 Comparison:
 
-```python
+```{.python .input}
 waves_z = np.mean(mean_sub_u, axis=0, keepdims=True)
 full_waves_xz = np.repeat(waves_xz, waves_z.shape[1], axis=1)
 
@@ -238,7 +234,7 @@ superposition is a good first approximation.
 When we subtract the waves from the velocity pattern we get a
 cleaner looking structure:
 
-```python
+```{.python .input}
 ix = 10
 u_levels = np.linspace(-0.03, 0.1, 100)
 fig, axes = plt.subplots(nrows=4, figsize=(12, 12))
@@ -287,7 +283,7 @@ are homogeneous in z and nearly homogeneous in x, combined with the
 current being nearly statistically homogeneous in x when we
 transform to the front frame. The implementation below gets it:
 
-```python
+```{.python .input}
 uf = transformer.to_front(r.U, order=0)
 
 # compute mean from uf
@@ -329,7 +325,7 @@ new_waves = np.mean(new_mean_sub_u, axis=0, keepdims=True)
 
 example plots:
 
-```python
+```{.python .input}
 fig, axes = plt.subplots(nrows=7, figsize=(10, 20))
 axes[0].contourf(new_waves[0], 100)
 axes[1].contourf(new_waves[0] - waves_xz[0], 100)
@@ -356,7 +352,7 @@ There are two further ways of extracting the wave signal:
 In some runs the current is deep and method 1 is not practical. We
 therefore need to extrapolate the time series.
 
-```python
+```{.python .input}
 # extract velocities up to point of current onset and take the mean
 # over x and z
 laminar_slice = np.s_[:, :, 250:2500]
@@ -377,7 +373,7 @@ smooth_v = np.convolve(mean_v, window / window.sum(), mode='same')
 smooth_w = np.convolve(mean_w, window / window.sum(), mode='same')
 ```
 
-```python
+```{.python .input}
 plt.plot(t, smooth_u, label='u')
 plt.xlabel('time')
 title = plt.title('pre-current streamwise velocity')
@@ -390,7 +386,7 @@ point is a linear combination of previous points.
 
 [dsp_stackexchange]: http://dsp.stackexchange.com/questions/101/how-do-i-extrapolate-a-1d-signal
 
-```python
+```{.python .input}
 from spectrum import arburg
 
 n = 500  # order of AR model
@@ -414,7 +410,7 @@ vertical and cross stream axes due to the symmetry of the system.
 That is, outside of turbulent flow, we should not have any variation
 in $v$, the cross stream component of velocity.
 
-```python
+```{.python .input}
 plt.plot(t, mean_u, label=r'$u$ (streamwise)')
 plt.plot(t, mean_v, label=r'$v$ (cross stream)')
 plt.plot(t, mean_w, label=r'$w$ (vertical)')
@@ -443,7 +439,7 @@ Challis, J.H. (1995). A procedure for determining rigid body transformation para
 Umeyama, Shinji 1991, Least Squares Estimation of transformation parameters between two point patterns.
 [](http://nghiaho.com/?page_id=671)
 
-```python
+```{.python .input}
 # vector of recorded points (2xn)
 vec = np.vstack((smooth_u.flat, smooth_v.flat))
 
