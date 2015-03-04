@@ -75,7 +75,7 @@ def nonlinear_coeffs(n0, h1, H, p1, p2=1):
     c = (g_ * h1 * h2 / (H) ) ** .5
     alpha = (3 * c * (h2 - h1)) / (2 * h1 * h2)
     beta = c * h1 * h2 / 6
-    
+
     V = c + alpha * n0 / 3
     D = (12 * beta / (alpha * n0))
     return c, V, D
@@ -105,7 +105,7 @@ fig, axes = plt.subplots(nrows=len(runs), figsize=(6, 18))
 for r, ax, amp in zip(runs, axes, amplitudes):
     # FIXME!!!! make it non-dimensional
     ax.contourf(r.waves.x, r.waves.t, r.waves.z, 50, cmap=plt.cm.bone)
-    
+
     # plot the linear wave speed
     g = 9.81
     H = r.parameters['H']
@@ -116,33 +116,33 @@ for r, ax, amp in zip(runs, axes, amplitudes):
     g_ = g * (p1 - p2) / p2
     #print r.index, ' ', p0, ' ', p1, ' ', p2
     h1 = r.parameters['h_1']
-    
+
     U = (g_ * H) ** .5
     t = r.waves.t
     xu = 0.5 * U * t
-    
+
     ax.plot(xu, t, linewidth=2)
-    
+
     # linear two layer speed
     c0 = U * (h1 * (1 - h1)) ** .5
     xc = c0 * t
-    
+
     ax.plot(xc, t, linewidth=2)
-    
+
     # linear single
     cl = (g_ * h1 * H) ** .5
     xl = cl * t
     ax.plot(xl, t)
-    
+
     # non-linear wave speed
     c, V, D = nonlinear_coeffs(amp / 0.25, h1 * H, H, p1, p2)
     #print("c = {}, V = {}, D = {}".format(c, V, D))
     ax.plot(c * t, t)
     ax.plot(V * t, t)
-        
+
     ax.set_xlim(0, 12)
     ax.set_ylim(0, 60)
-    
+
 fig.tight_layout()
 ```
 
@@ -177,8 +177,8 @@ fig, axes = plt.subplots(nrows=len(runs), figsize=(6, 18))
 
 for t, ax in zip(transforms_morlet, axes):
     ax.plot(t.time, t.data)
-    
-fig.tight_layout() 
+
+fig.tight_layout()
 ```
 
 ```{.json .output n=22}
@@ -200,7 +200,7 @@ fig, axes = plt.subplots(nrows=len(runs), ncols=2, figsize=(12, 18))
 for i, (tm, tr) in enumerate(zip(transforms_morlet, transforms_ricker)):
     tm.plot_power(axes[i, 0])
     tr.plot_power(axes[i, 1])
-    
+
 fig.tight_layout()
 ```
 
@@ -300,9 +300,9 @@ for run in runs:
 
 def ricker_transform(run):
     z_1m = run.waves(1, run.waves.t).squeeze()
-    return WaveletTransform(z_1m, 
-                            time=run.waves.t, 
-                            dt=0.04, 
+    return WaveletTransform(z_1m,
+                            time=run.waves.t,
+                            dt=0.04,
                             unbias=True,
                             wavelet=Ricker())
 
@@ -399,19 +399,19 @@ def ridgelet_transform(run, theta=None, scales=None, wavelet=Morlet()):
 
     # square the wave data
     data = run.waves(space, time)
-    
+
     # zero the data outside of a circle
     i, j = np.indices(data.shape)
     i_ = i - i.max() / 2
     j_ = j - j.max() / 2
-    
+
     outside_circle = (i_ ** 2 + j_ ** 2) ** .5 + 1 > i.max() / 2
     data[outside_circle] = 0
 
     # perform the radon transform
     sinogram = radon(data, theta=theta, circle=True)
 
-    # wavelet transform the sinogram over the position axis 
+    # wavelet transform the sinogram over the position axis
     # to compute the ridgelet transform
     wavelet_transform = WaveletTransform(sinogram, axis=0, wavelet=wavelet, unbias=True)
     wavelet_transform.dj = 0.1
@@ -433,7 +433,7 @@ centre and peak at 45 degrees rotation and half way along the position axis.
 # square the wave data
 data = runs[1].waves(space, time)
 unzeroed_data = data.copy()
-    
+
 # zero the data outside of a circle
 i, j = np.indices(data.shape)
 i_ = i - i.max() / 2
@@ -535,42 +535,42 @@ into the gradient and intercept of a straight line through the data.
 
 ```{.python .input  n=228}
 def radon_to_square(r, theta, width):
-    """Convert a point in the radon transform into a 
+    """Convert a point in the radon transform into a
     line in the pixel space of the input to the transform.
-    
+
     r - radon position
     theta - radon angle, degrees
-    width - width of input array 
-    
+    width - width of input array
+
     returns:
-    
+
     [m, c] - to construct y = m * x + c
-    
+
     Assumes that the transform has been performed around the
     central point of a square 2d array, which transforms to
     the centre of the radon position.
     """
     # use radians
     theta = np.deg2rad(theta)
-    
+
     xc = width / 2.
     yc = width / 2.
-    
+
     # centre of the radon axis
     rc = (2 * width ** 2) ** .5 / 2
     rc = width / 2
-    
+
     # determine point in x, y that is in the centre of the
     # line integral
     x = xc + (r - rc) * np.cos(theta)
     y = yc - (r - rc) * np.sin(theta)
-    
+
     # determine the gradient
     m = 1 / np.tan(theta)
-    
+
     # determine the y intercept
     c = y - x * m
-    
+
     return m, c
 
 
@@ -578,19 +578,19 @@ def square_to_real(m, c, x, y):
     """Convert gradient and y-intercept from square pixel coords into
     real data coords, given the axes used to interpolate the square
     array.
-    
+
     m - gradient (pixels / pixel)
     c - y-intercept (pixels)
     x - x array
     y - y array
-    
+
     where
-    
+
         square_array = r.waves(x, y)
     """
     dx = np.diff(x).mean()
     dy = np.diff(y).mean()
-    
+
     return m * dy / dx, y[c]
 ```
 
@@ -599,8 +599,8 @@ detected ridges onto the input data by reading the maxima off
 manually:
 
 ```{.python .input  n=231}
-maxima = [(210, 72), 
-          (180, 56.5), 
+maxima = [(210, 72),
+          (180, 56.5),
           (160, 55)]
 
 plt.contourf(r.waves(space, time), 50)
@@ -713,7 +713,7 @@ for i, transforms in enumerate(all_transforms):
                 axes[i, j].set_yticks([])
         if i != 6:
             axes[i, j].set_xticks([])
-        
+
 fig.tight_layout()
 ```
 
@@ -846,7 +846,7 @@ plt.plot(x, signal)
 
 plt.axhline(signal.mean())
 
-# use the biggest peak to identify the first and remove 
+# use the biggest peak to identify the first and remove
 # all the extrema before it
 extrema = signal ** 2 == ndi.maximum_filter1d(signal ** 2, 10)
 first = np.abs(signal * extrema).argmax()
@@ -919,6 +919,7 @@ To find the best guess for the location of the extrema we find the nearest-
 neighbours in the 2d extrema to our 1d signal detected extrema. A particularly
 efficient way to do this is to use a KD-tree:
 
+
 ```{.python .input  n=638}
 # zero in on the maxima location
 
@@ -957,6 +958,67 @@ plt.plot(*abs_max.T, marker='o')
 ```
 
 
+### Wrapping up: a single function for peak detection
+
+Condense all of the above into a single function:
+
+```{.python}
+from skimage.transform import radon
+
+from wavelets import Ricker
+
+def detect_peaks(run):
+    # square the data
+    time = np.linspace(0, 60, 300)
+    space = np.linspace(4, 12, 300)
+
+    # calculate the ridgelet transform
+    transform = ridgelet_transform(run, wavelet=Ricker())
+
+    # sum over a subset of scales and ignore extremes of position
+    filtered_sinogram = transform[10:30, 20:-20].real.sum(axis=0) ** 2
+    smoothed_sinogram = ndi.gaussian_filter(filtered_sinogram, sigma=3)
+
+    # approx maxima detection
+    signal = smoothed_sinogram.mean(axis=1)
+    x = np.arange(signal.shape[0])
+    maxima = signal == ndi.maximum_filter1d(signal, 10)
+    minima = signal == ndi.minimum_filter1d(signal, 10)
+
+    # use the largest peak to determine the first one
+    extrema = signal ** 2 == ndi.maximum_filter1d(signal ** 2, 10)
+    first = np.abs(signal * extrema).argmax()
+    maxima[first + 1:] = False
+    minima[first + 1:] = False
+
+    # now find the angles
+    angle_max = smoothed[maxima].argmax(axis=1)
+    position_max = np.where(maxima)[0]
+
+    # kdtree refinement
+    max2d = ndi.maximum_filter(smoothed_sinogram, size=10) == smoothed_sinogram
+
+    all_max = np.array(np.where(max2d)).T
+    found_max = np.array((position_max, angle_max)).T
+
+    # overkill! A kd-tree finds the nearest points to a given set
+    from scipy.spatial import KDTree
+    tree = KDTree(all_max)
+    abs_max_distance, abs_max_indices = tree.query(found_max)
+    refined__maxima = all_max[abs_max_indices]
+
+    return refined_maxima
+
+    # convert maxima into wave speeds/ positions
+    detected_waves = [square_to_real(*radon_to_square(pos, angle,
+                                                    width=time.size,
+                                                    x=space, y=time))
+                            for pos, angle in refined_maxima]
+
+```
+
+### Bimodal wave distribution:
+
 ```{.python .input  n=315}
 plt.plot(np.abs(smoothed).sum(axis=0))
 ```
@@ -979,6 +1041,12 @@ plt.plot(np.abs(smoothed).sum(axis=0))
 ]
 ```
 
+The waves can travel at two distinct speeds, before and after
+crossing the current head. This means two distinct branches of
+maxima in the ridgelet transform, separated in theta.
+
+
+### Misc crap
 
 ```{.python .input  n=344}
 dog0 = wavelets.DOG(m=0)
