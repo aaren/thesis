@@ -9,7 +9,7 @@ import internalreferences as ir
 def suppress_input_cells(key, value, format, metadata):
     """Suppresses code cells that have the attribute '.input'.
     """
-    if format == 'latex' and key == 'CodeBlock' and 'input' in value[0][1]:
+    if format == 'latex' and key == 'CodeBlock':
         return pf.Null()
 
 
