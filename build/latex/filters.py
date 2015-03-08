@@ -17,7 +17,7 @@ def raw_equations(key, value, format, metadata):
     """Pass latex contained in $$...$$ to latex writer
     as raw latex.
     """
-    if key == 'Math' and format == 'latex':
+    if format == 'latex' and key == 'Math' and value[0]['t'] == 'DisplayMath':
         mathtype, content = value
         # n.b, has to be rawinline as the element we are replacing
         # is inline
