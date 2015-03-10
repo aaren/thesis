@@ -1,0 +1,26 @@
+/* adapted from http://codepen.io/dudleystorey/pen/tjzcm */
+/* http://demosthenes.info/blog/506/HTML5-Window-Toggle-Events-In-Pure-CSS3 */
+
+div.collapsible { 
+  color: white;
+  border-radius: 0px;
+  margin: 1rem;
+  margin: 0 auto; 
+}
+div.collapsible label { 
+  display: block;
+  background: #555;
+  border-radius: 5px;
+  padding: .1rem;
+  transition: .01s all linear; 
+}
+div.collapsible label:hover { 
+  cursor: pointer; background: #311; 
+}
+input.toggle ~ div { 
+  height: 0px; margin: .2rem;
+  overflow: hidden;
+}
+input.toggle:checked ~ div { height: auto; }
+input.toggle:checked + label { background: grey; }
+input.toggle { display: none; }
