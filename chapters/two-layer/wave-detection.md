@@ -1,3 +1,8 @@
+---
+layout: chapter
+title: The two layer fluid
+---
+
 # Gravity currents in a two layer fluid
 
 ```{.python .input  n=1}
