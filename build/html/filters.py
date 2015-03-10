@@ -26,15 +26,21 @@ def make_site_links(key, value, format, metadata):
 
 
 def enclose_input_code(key, value, format, metadata):
-    """Enclose any input code in a div to allow collapsing."""
+    """Enclose any input code in a div to allow collapsing.
+
+    'Input code' is a code block that has 'n' defined (the prompt
+    number).
+    """
     if key == 'CodeBlock':
         div_attr = {'classes': ['collapsible']}
         code_attr = PandocAttributes(value[0], format='pandoc')
-        # this will fail if the codeblock doesn't have 'n' set
-        button = pf.RawBlock('html', collapse_button(n=code_attr['n']))
-        code = pf.CodeBlock(*value)
-        content = [button, pf.Div(pf.attributes({}), [code])]
-        return pf.Div(pf.attributes(div_attr), content)
+        if 'n' not in code_attr.kvs:
+            return
+        else:
+            button = pf.RawBlock('html', collapse_button(n=code_attr['n']))
+            code = pf.CodeBlock(*value)
+            content = [button, pf.Div(pf.attributes({}), [code])]
+            return pf.Div(pf.attributes(div_attr), content)
 
 
 if __name__ == '__main__':
