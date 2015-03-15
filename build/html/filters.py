@@ -44,7 +44,7 @@ def enclose_input_code(key, value, format, metadata):
 
 
 if __name__ == '__main__':
-    refman = ir.ReferenceManager()
+    refman = ir.ReferenceManager(autoref=True)
     ir.toJSONFilter([make_site_links, enclose_input_code] + refman.reference_filter)
     # ir.toJSONFilter(refman.reference_filter)
     # ir.toJSONFilter(make_site_links)

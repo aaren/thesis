@@ -40,7 +40,7 @@ runs = [Run(index) for index in okruns]
 We are considering the release of a gravity current into a two layer
 fluid in a lock release configuration.
 
-Figure #fig:example-wavefield shows the non-dimensionalised
+@fig:example-wavefield shows the non-dimensionalised
 interfacial wavefield from one of these experiments in a hovmoller
 plot.
 
@@ -75,7 +75,7 @@ We clearly see the evolution of an amplitude ordered series of waves
 following the release of the lock gate at $t=0$.
 
 We have performed a number of experiments. The wavefields for each
-run can be seen in #fig:all-wavefields.
+run can be seen in @fig:all-wavefields.
 
 *[Aaron]: many more runs to consider but they need a little
 straightening up first.*
@@ -145,7 +145,7 @@ the radon transform (a cross), formed because the line integral over
 a square of constant value varies with the position of the line.
 This artefact forms a cross with its centre and peak at 45 degrees
 rotation and half way along the position axis, as shown in
-#fig:radon-circle.
+@fig:radon-circle.
 
 ```{.python .input  n=16 #fig:radon-circle}
 from skimage.transform import radon
@@ -190,7 +190,7 @@ fig.tight_layout()
 ]
 ```
 
-In #fig:radon-circle we can see the individual waves represented as
+In @fig:radon-circle we can see the individual waves represented as
 peaks in the radon space $(r, \theta)$. Identifying individual waves
 is as simple as distinguishing these peaks. The full ridgelet
 transform makes this even easier.
@@ -243,7 +243,7 @@ def ridgelet_transform(run, theta=None, scales=None, wavelet=Morlet(),
 ```
 
 For example, consider the ridgelet transform of the run in
-#fig:example-wavefield.
+@fig:example-wavefield.
 
 ```{.python .input  n=18}
 theta = np.linspace(20, 90, 150, endpoint=True)
@@ -252,7 +252,7 @@ rt = ridgelet_transform(r, theta=theta, wavelet=Ricker())
 ```
 
 The ridgelet transform, summed over a subset of the scales, is shown
-in #fig:ridgelet-example.
+in @fig:ridgelet-example.
 
 ```{.python .input  n=19 #fig:ridgelet-example}
 position = np.arange(rt.shape[1])
@@ -441,11 +441,11 @@ fig.tight_layout()
 between the different wavelets. Need to use equivalent fourier
 period*
 
-The comparison of ridgelet transforms in #fig:ridgelet-wavelet-comparison
+The comparison of ridgelet transforms in @fig:ridgelet-wavelet-comparison
 confirms that the Ricker wavelet is the one to use when searching for peaks.
 
 The Ricker-based ridgelet transform of each of the runs is show in
-#fig:ricker-ridgelets.
+@fig:ricker-ridgelets.
 
 ```{.python .input  n=26}
 ricker_ridgelets = [ridgelet_transform(r, theta=theta, wavelet=Ricker()) for r in runs]
@@ -780,7 +780,7 @@ def detect_waves(run, index=False, tlim=(0, 60), xlim=(0, 12), res=300, velocity
 ```
 
 The results of wave detection using the above method are shown in
-#fig:all-detection.
+@fig:all-detection.
 
 ```{.python .input  n=389 #fig:all-detection}
 def plot_waves(r, ax=None):
@@ -868,7 +868,7 @@ for r in runs:
 
 ## Results
 
-Figure #fig:speed-vs-amplitude shows wave speed against wave
+@fig:speed-vs-amplitude shows wave speed against wave
 amplitude for each wave detected in a run and for each run.
 
 ```{.python .input  n=381 #fig:speed-vs-amplitude}
