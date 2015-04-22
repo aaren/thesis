@@ -56,7 +56,6 @@ dependencies:
 - traits=4.4.0=py27_0
 - traitsui=4.4.0=py27_0
 - vtk=5.10.1=py27_1
-- wxpython=3.0.2.0=py27_2
 - yaml=0.1.4=0
 - zeromq=4.0.4=0
 - zlib=1.2.8=0
@@ -100,4 +99,3 @@ dependencies:
   - wavelets (/home/aaron/code/wavelets)==0.1
   - werkzeug==0.9.6
   - wheel==0.24.0
-  - wxpython-common==3.0.2.0
