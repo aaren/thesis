@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="/thesis/public/css/hyde.css">
   <!-- zenburn css from pandoc. Get it by copying from `pandoc -s -highlight zenburn something.md` -->
   <link rel="stylesheet" href="/thesis/public/css/zenburn.css">
+  <!-- allow collapsing input cells -->
+  <link rel="stylesheet" href="/thesis/public/css/collapse.css">
   <!-- font -->
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
 
@@ -106,6 +108,12 @@
           
         
       
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/subtracting-waves-from-piv-data/">Subtracting waves from PIV data</a>
+          
+        
+      
 
       <a class="sidebar-nav-item" href="https://github.com/aaren/thesis">GitHub</a>
     </nav>
@@ -121,15 +129,15 @@
 <p>This page is written in markdown.</p>
 <h2 id="sec:equations">1.1: Equations</h2>
 <p>Here is an equation:</p>
-<p><br /><span class="math">$$
+<p><span id="#eq:life"><br /><span class="math">$$
 \begin{equation}
 \exp^{i\pi} + 1 = 0
 \label{eq:life}
 \end{equation}
-$$</span><br /></p>
+$$</span><br /></span></p>
 <p>On the web it is rendered with mathjax.</p>
 <h2 id="internal-references">1.2: Internal References</h2>
-<p>We saw Equation \eqref{eq:life} in #sec:equations. We're now going to look at <a href="#fig:attr">Figure 1</a> and #fig:div.</p>
+<p>We saw #eq:life in #sec:equations. We're now going to look at #fig:attr and #fig:div.</p>
 <h2 id="figures">1.3: Figures</h2>
 <p>We can include regular markdown images:</p>
 <figure>
@@ -151,13 +159,29 @@ $$</span><br /></p>
 
 <h3 id="figures-from-code">1.3.1: Figures from code</h3>
 <p>Let's try and generate a figure from code. Here is some python setup:</p>
+<div class="collapsible">
+
+<input type="checkbox" id="codeblock-1" class="toggle">
+    <label for="codeblock-1">Source code [1]</label>
+
+<div>
 <pre class="sourceCode python input" n="1"><code class="sourceCode python"><span class="ch">import</span> matplotlib.pyplot <span class="ch">as</span> plt
 <span class="ch">import</span> numpy <span class="ch">as</span> np
 %matplotlib inline</code></pre>
+</div>
+</div>
 <p>and here is the code that generates #fig:test|:</p>
+<div class="collapsible">
+
+<input type="checkbox" id="codeblock-2" class="toggle">
+    <label for="codeblock-2">Source code [2]</label>
+
+<div>
 <pre class="sourceCode python input" id="fig:test" n="2"><code class="sourceCode python">x = np.linspace(<span class="dv">2</span>, <span class="dv">5</span>)
 plt.plot(x, x ** <span class="dv">2</span>)
 <span class="dt">print</span> <span class="st">&quot;hello from ipython!&quot;</span></code></pre>
+</div>
+</div>
 <div class="outputs" n="2">
 <p>hello from ipython!</p>
 

@@ -4,7 +4,7 @@
  <title>Aaron O'Leary PhD Thesis</title>
  <link href="http://aaren.github.io/atom.xml" rel="self"/>
  <link href="http://aaren.github.io/"/>
- <updated>2014-11-05T19:09:20+00:00</updated>
+ <updated>2015-08-08T22:56:16+01:00</updated>
  <id>http://aaren.github.io</id>
  <author>
    <name>Aaron O'Leary</name>
@@ -17,17 +17,17 @@
    <link href="http://aaren.github.io/2014/10/27/auto-build-jekyll-github-pages/"/>
    <updated>2014-10-27T00:00:00+00:00</updated>
    <id>http://aaren.github.io/2014/10/27/auto-build-jekyll-github-pages</id>
-   <content type="html">&lt;p&gt;I'm working with a file structure like this on master:&lt;/p&gt;
+   <content type="html">&lt;p&gt;I&#39;m working with a file structure like this on master:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;thesis/
     chapters/
     papers/
     build/
         latex/
         html/  &amp;lt;-- Jekyll project for this site&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;I want this site to be published on github pages, but I can't let Github build it for me because I'm using a custom Jekyll config (using pandoc).&lt;/p&gt;
-&lt;p&gt;I also don't want to track the &lt;code&gt;_site&lt;/code&gt; folder in the Jekyll project on my master branch, and I'd like for my site to be automatically built each time I commit to master.&lt;/p&gt;
+&lt;p&gt;I want this site to be published on github pages, but I can&#39;t let Github build it for me because I&#39;m using a custom Jekyll config (using pandoc).&lt;/p&gt;
+&lt;p&gt;I also don&#39;t want to track the &lt;code&gt;_site&lt;/code&gt; folder in the Jekyll project on my master branch, and I&#39;d like for my site to be automatically built each time I commit to master.&lt;/p&gt;
 &lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;: I've stopped doing the complicated solution below and now use &lt;code&gt;make pages&lt;/code&gt; with the following recipe in my Makefile:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;update&lt;/strong&gt;: I&#39;ve stopped doing the complicated solution below and now use &lt;code&gt;make pages&lt;/code&gt; with the following recipe in my Makefile:&lt;/p&gt;
 &lt;pre class=&quot;make&quot;&gt;&lt;code&gt;html: render
     cd ${html_build} &amp;amp;&amp;amp; jekyll build &amp;amp;&amp;amp; cd -
 
