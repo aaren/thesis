@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for f in chapters/*.md; do
+    word_count=$(pandoc $f --to markdown --filter tools/strip_code.py | wc -w)
+    echo "$f: $word_count"
+done
