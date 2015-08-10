@@ -26,8 +26,8 @@ On the web it is rendered with mathjax.
 Internal References
 -------------------
 
-We saw #eq:life in #sec:equations. We're now going to look at
-#fig:attr and #fig:div.
+We saw @eq:life in @sec:equations. We're now going to look at
+@fig:attr and @fig:div.
 
 
 Figures
@@ -60,7 +60,7 @@ import numpy as np
 %matplotlib inline
 ```
 
-and here is the code that generates #fig:test|:
+and here is the code that generates @fig:test:
 
 ```{.python .input #fig:test n=2}
 x = np.linspace(2, 5)
