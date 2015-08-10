@@ -15,13 +15,14 @@ def suppress_input_cells(key, value, format, metadata):
 
 def raw_equations(key, value, format, metadata):
     """Pass latex contained in $$...$$ to latex writer
-    as raw latex.
+    as raw latex *if* the latex starts with 'begin'.
     """
     if format == 'latex' and key == 'Math' and value[0]['t'] == 'DisplayMath':
         mathtype, content = value
-        # n.b, has to be rawinline as the element we are replacing
-        # is inline
-        return pf.RawInline('latex', content)
+        if content.strip().startswith('\\begin{'):
+            # n.b, has to be rawinline as the element we are replacing
+            # is inline
+            return pf.RawInline('latex', content)
 
 
 def isOutputFigure(key, value):
@@ -67,5 +68,5 @@ def make_site_links(key, value, format, metadata):
 
 if __name__ == '__main__':
     refman = ir.ReferenceManager()
-    ir.toJSONFilter([make_site_links, save_uri, suppress_input_cells]
-                    + refman.reference_filter + [raw_equations])
+    ir.toJSONFilter([make_site_links, save_uri, suppress_input_cells, raw_equations]
+                    + refman.reference_filter)
