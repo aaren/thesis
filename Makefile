@@ -5,6 +5,7 @@ metadata = meta.yaml
 latex_build = build/latex
 html_build = build/html
 rendered = build/rendered
+which_rendered = *.md
 
 output_pdf = thesis.pdf
 
@@ -19,7 +20,15 @@ source += $(wildcard chapters/*.ipynb)
 # but this might mean reconfiguring the output destination from render
 # and the symlinking into the jekyll build
 
-render: ${source_md} ${source_nb}
+# single chapter creation mode (set chapter=chapters/blah.md on command line)
+ifneq ("$(chapter)", "")
+	source = $(chapter)
+	fname = "$(basename $(notdir $(chapter)))"
+	output_pdf = "$(fname).pdf"
+	which_rendered = "$(fname).md"
+endif
+
+render: ${source}
 	@echo $(source)
 	@mkdir -p ${rendered}
 	@echo "Copying images..."
@@ -61,7 +70,13 @@ pdf: render
 	postlims="$$(pandoc $(metadata) \
 	             --template ${latex_build}/postlims.tex \
 				 --to latex)"; \
-	pandoc $(metadata) ${rendered}/*.md -o ${output_pdf} \
+
+ifneq ("$(chapter)", "")
+	prelims=""
+	postlims=""
+endif
+
+	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=prelims:"$$prelims" \
@@ -69,11 +84,9 @@ pdf: render
         --filter ${latex_build}/filters.py
 
 chapter: render
-	pandoc $(metadata) ${rendered}/00-demo.md -o chapter.pdf \
+	pandoc $(metadata) ${rendered}/05-turbulence-wave-subtraction.md -o chapter.pdf \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
-		--variable=prelims:"$$prelims" \
-		--variable=postlims:"$$postlims" \
         --filter ${latex_build}/filters.py
 
 tex: render
