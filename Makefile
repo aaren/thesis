@@ -81,7 +81,7 @@ chapter: render
         --filter ${latex_build}/filters.py
 
 tex: render
-	abbreviations=$$(pandoc abbreviations.md --to latex); \
+	@abbreviations=$$(pandoc abbreviations.md --to latex); \
 	prelims="$$(pandoc $(metadata) \
 				--template ${latex_build}/prelims.tex \
 				--variable=abbreviations:"$$abbreviations" \
