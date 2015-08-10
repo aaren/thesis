@@ -1,15 +1,12 @@
 ---
-title: A profoundly interesting title.
+title: On the Structure and Dynamics of Gravity Currents in Homogeneous and Two-Layer Fluids
 
 author: 
-    name: Your name
-    email: your@email.address
+    name: Aaron O'Leary
+    email: eeaol@leeds.ac.uk
 
 abstract: |
-    This is the abstract: a nice concise plain text description
-    of what is to come.
-
-    It can be spread over multiple paragraphs.
+    Lab work is difficult.
 
 declaration: |
     This is all my own work, etc. etc.
@@ -19,16 +16,16 @@ acknowledgements: Lots and lots of people.
 copyright: me and the University
 
 university:
-    name: The University of Metadata
-    url: metadata.com
+    name: The University of Leeds
+    url: http://www.leeds.ac.uk
 
 department:
-    name: School of YAML
-    url: yaml.com
+    name: School of Earth and Environment
+    url: http://see.leeds.ac.uk
 
 group:
-    name: Institute of Strings
-    url: group.com
+    name: Institute of Climate and Atmospheric Science
+    url: http://www.see.leeds.ac.uk/research/icas/
 
 thesis_class: build/latex/Thesis
 build: build
