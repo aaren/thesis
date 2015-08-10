@@ -68,5 +68,7 @@ def make_site_links(key, value, format, metadata):
 
 if __name__ == '__main__':
     refman = ir.ReferenceManager()
-    ir.toJSONFilter([make_site_links, save_uri, suppress_input_cells, raw_equations]
-                    + refman.reference_filter)
+    # raw_equations has to come last as it returns raw latex
+    ir.toJSONFilter([make_site_links, save_uri, suppress_input_cells]
+                    + refman.reference_filter
+                    + [raw_equations])
