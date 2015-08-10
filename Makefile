@@ -20,6 +20,8 @@ source_nb := $(wildcard chapters/*.ipynb)
 # and the symlinking into the jekyll build
 
 render: ${source_md} ${source_nb}
+	@echo ${source_md}
+	@echo ${source_nb}
 	@mkdir -p ${rendered}
 	@echo "Copying images..."
 	@rsync -a chapters/figures build/rendered/
