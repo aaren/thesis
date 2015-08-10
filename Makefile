@@ -12,25 +12,21 @@ output_pdf = thesis.pdf
 
 all: html pdf
 
-source_md := $(wildcard chapters/*.md)
-source_nb := $(wildcard chapters/*.ipynb)
+source := $(wildcard chapters/*.md)
+source += $(wildcard chapters/*.ipynb)
 # later we might want to use this:
 # source_md = $(shell find chapters -name '*.md' | sort)
 # but this might mean reconfiguring the output destination from render
 # and the symlinking into the jekyll build
 
 render: ${source_md} ${source_nb}
-	@echo ${source_md}
-	@echo ${source_nb}
+	@echo $(source)
 	@mkdir -p ${rendered}
 	@echo "Copying images..."
 	@rsync -a chapters/figures build/rendered/
 	@echo "Rendering notebooks..."
-ifneq ("${source_md}", "")
-	@$(foreach f, ${source_md}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
-endif
-ifneq ("$(source_nb)", "")
-	@$(foreach f, ${source_nb}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
+ifneq ("${source}", "")
+	@$(foreach f, ${source}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
 endif
 
 html: render
