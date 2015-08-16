@@ -1,7 +1,9 @@
 ---
 layout: chapter
-title: Dynamic Mode Decomposition of a Gravity Current
+title: Dynamic Mode Decomposition
 ---
+
+# Dynamic Mode Decomposition of a Gravity Current {#sec:dmd}
 
 ## Introduce DMD
 
