@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Dynamic Mode Decomposition &middot; Aaron O'Leary PhD Thesis
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/thesis/public/css/poole.css">
+  <!-- <link rel="stylesheet" href="/thesis/public/css/syntax.css"> -->
+  <link rel="stylesheet" href="/thesis/public/css/hyde.css">
+  <!-- zenburn css from pandoc. Get it by copying from `pandoc -s -highlight zenburn something.md` -->
+  <link rel="stylesheet" href="/thesis/public/css/zenburn.css">
+  <!-- allow collapsing input cells -->
+  <link rel="stylesheet" href="/thesis/public/css/collapse.css">
+  <!-- font -->
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/thesis/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/thesis/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          TeX: { equationNumbers: { autoNumber: "all" } }
+              // can use autonumber: 'AMS'
+      });
+  </script>
+  <script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/thesis/">
+          Aaron O'Leary PhD Thesis
+        </a>
+      </h1>
+      <p class="lead">Gravity currents, non-linear waves, turbulence and stratification.</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/thesis/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/about/">About</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+
+      
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/demo/">demo</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/introduction/">Introduction</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/literature-review/">Literature Review</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/subtracting-waves-from-piv-data/">Subtracting waves from PIV data</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item active" href="/thesis/chapters/dynamic-mode-decomposition/">Dynamic Mode Decomposition</a>
+          
+        
+      
+
+      <a class="sidebar-nav-item" href="https://github.com/aaren/thesis">GitHub</a>
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="chapter">
+  <h1 id="sec:dmd">1: Dynamic Mode Decomposition of a Gravity Current</h1>
+<h2 id="introduce-dmd">1.1: Introduce DMD</h2>
+<h3 id="build-physical-intuition">1.1.1: Build Physical Intuition</h3>
+<h3 id="basic-linear-algebra">1.1.2: Basic Linear Algebra</h3>
+<h3 id="compare-with-pod-eof">1.1.3: Compare with POD / EOF</h3>
+<h2 id="apply-dmd-to-data">1.2: Apply DMD to data</h2>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">import</span> numpy <span class="im">as</span> np
+<span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt
+<span class="op">%</span>matplotlib inline
+
+<span class="im">import</span> gc_turbulence <span class="im">as</span> g
+<span class="im">import</span> sparse_dmd
+<span class="im">from</span> sparse_dmd <span class="im">import</span> DMD
+
+
+index <span class="op">=</span> <span class="st">&#39;r14_01_14a&#39;</span>
+<span class="co"># waveless is temporary until we integrate into ProcessedRun</span>
+r <span class="op">=</span> g.WavelessRun(index)
+
+<span class="co"># 400 is temporary until we clean out the nans</span>
+uf <span class="op">=</span> r.Uf[:, :, <span class="dv">400</span>:]
+
+snapshots <span class="op">=</span> sparse_dmd.to_snaps(uf, decomp_axis<span class="op">=</span><span class="dv">1</span>)
+dmd <span class="op">=</span> DMD(snapshots)
+dmd.compute()</code></pre></div>
+<p>Basic dmd plots...</p>
+<p>Mode frequency vs. amplitude:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">fig, ax <span class="op">=</span> plt.subplots()
+ax.set_title(<span class="st">&#39;|xdmd| vs frequency&#39;</span>)
+ax.set_xlabel(<span class="st">&#39;frequency&#39;</span>)
+ax.set_ylabel(<span class="st">&#39;amplitude&#39;</span>)
+ax.plot(dmd.frequencies.imag, np.<span class="bu">abs</span>(dmd.amplitudes), <span class="st">&#39;ko&#39;</span>)</code></pre></div>
+<p>Mode frequency vs. growth rate:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">fig, ax <span class="op">=</span> plt.subplots()
+ax.set_title(<span class="st">&#39;mode spectrum&#39;</span>)
+ax.set_xlabel(<span class="st">&#39;frequency&#39;</span>)
+ax.set_ylabel(<span class="st">&#39;growth rate&#39;</span>)
+scat <span class="op">=</span> ax.scatter(dmd.frequencies.imag, dmd.frequencies.real,
+           c<span class="op">=</span>np.<span class="bu">abs</span>(dmd.amplitudes), linewidth<span class="op">=</span><span class="dv">0</span>, cmap<span class="op">=</span>plt.cm.bone_r)</code></pre></div>
+<p>First few modes:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co"># reshape from modes from snapshot to data</span>
+modes <span class="op">=</span> sparse_dmd.to_data(dmd.modes, shape<span class="op">=</span>uf.shape, decomp_axis<span class="op">=</span><span class="dv">1</span>)
+<span class="co"># transpose so that we index on first axis</span>
+modes <span class="op">=</span> modes.transpose((<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">2</span>))
+<span class="co"># multiply by amplitude</span>
+modes <span class="op">=</span> modes <span class="op">*</span> dmd.amplitudes[:, <span class="va">None</span>, <span class="va">None</span>]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co"># mean is the first mode</span>
+mean_levels <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.11</span>, <span class="fl">0.04</span>, <span class="dv">100</span>)
+<span class="co"># subsequent modes need different scaling as they add on top of the mean</span>
+non_mean_levels <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.02</span>, <span class="fl">0.02</span>, <span class="dv">100</span>)
+
+fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">5</span>)
+ax[<span class="dv">0</span>].contourf(modes[<span class="dv">0</span>], levels<span class="op">=</span>mean_levels)
+ax[<span class="dv">1</span>].contourf(modes[<span class="dv">2</span>], levels<span class="op">=</span>non_mean_levels)
+ax[<span class="dv">2</span>].contourf(modes[<span class="dv">4</span>], levels<span class="op">=</span>non_mean_levels)
+ax[<span class="dv">3</span>].contourf(modes[<span class="dv">6</span>], levels<span class="op">=</span>non_mean_levels)
+ax[<span class="dv">4</span>].contourf(modes[<span class="dv">8</span>], levels<span class="op">=</span>non_mean_levels)</code></pre></div>
+<p>Whilst these modes capture the qualitative features of the current - the mean field perturbed by a shear layer at the top - they don't provide us with an especially useful quantitative means of understanding the flow.</p>
+<p>Compare with the first few POD modes. Together, these capture the bulk of the statistical variance within the current.</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co"># extract the pod modes (the left singluar vectors from svd of snapshots)</span>
+pod_modes <span class="op">=</span> sparse_dmd.to_data(dmd.reduction.U, shape<span class="op">=</span>uf.shape, decomp_axis<span class="op">=</span><span class="dv">1</span>)
+pod_modes <span class="op">=</span> pod_modes.transpose((<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">2</span>))
+
+singular_values <span class="op">=</span> np.diag(dmd.reduction.S)
+norms <span class="op">=</span> np.sqrt(singular_values)
+
+pod_modes <span class="op">=</span> pod_modes <span class="op">*</span> norms[:, <span class="va">None</span>, <span class="va">None</span>]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co"># mean is the first mode</span>
+mean_levels <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.11</span>, <span class="fl">0.04</span>, <span class="dv">100</span>)
+<span class="co"># subsequent modes need different scaling as they add on top of the mean</span>
+non_mean_levels <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.03</span>, <span class="dv">100</span>)
+
+fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">5</span>)
+ax[<span class="dv">0</span>].contourf(pod_modes[<span class="dv">0</span>], levels<span class="op">=</span>mean_levels)
+ax[<span class="dv">1</span>].contourf(pod_modes[<span class="dv">2</span>], levels<span class="op">=</span>non_mean_levels)
+ax[<span class="dv">2</span>].contourf(pod_modes[<span class="dv">4</span>], levels<span class="op">=</span>non_mean_levels)
+ax[<span class="dv">3</span>].contourf(pod_modes[<span class="dv">6</span>], levels<span class="op">=</span>non_mean_levels)
+ax[<span class="dv">4</span>].contourf(pod_modes[<span class="dv">8</span>], levels<span class="op">=</span>non_mean_levels)</code></pre></div>
+<p>Here we see a series of modes ranked by their statistical contribution to the flow. We could rank our DMD modes by this, their contribution to the variance, but this doesn't necessarily capture the dynamical drivers of the flow (##reference).</p>
+<p>There is no clear way to select the dominant DMD modes. This is a weakness of the standard DMD method.</p>
+<h2 id="introduce-problem-how-to-select-modes">1.3: Introduce problem 'how to select modes'?</h2>
+<p>We have the problem of selecting the dynamic modes that best represent the flow. A number of techniques have been proposed to achieve this.</p>
+<p>Overview existing methods - the intensive one used by chen?, semeraro, sparse dmd</p>
+<p>semeraro - 'convergence on attractors of fully developed turbulence'</p>
+<p>In the sparse method we select a subset of the dmd modes that best approximate the data series, given a sparsity criterion that varies the number of modes in the subset.</p>
+<h2 id="define-sparse-method">1.4: Define sparse method</h2>
+<h2 id="apply-sparse-method">1.5: Apply sparse method</h2>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> sparse_dmd <span class="im">import</span> SparseDMD
+
+sdmd <span class="op">=</span> SparseDMD(dmd<span class="op">=</span>dmd)
+<span class="co"># TODO: define appropriate gammaval</span>
+sdmd.compute_sparse(gammaval<span class="op">=</span>np.logspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">50</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co"># index where n=7</span>
+sdmd.compute_sparse_reconstruction(Ni<span class="op">=</span><span class="dv">21</span>, data<span class="op">=</span>uf.shape, decomp_axis<span class="op">=</span><span class="dv">1</span>)
+
+sparse_amplitudes <span class="op">=</span> sdmd.sparse.xsp[:, <span class="dv">21</span>].astype(<span class="bu">bool</span>)
+sparse_modes <span class="op">=</span> modes[sparse_amplitudes]</code></pre></div>
+<p>In this case I think the sparse modes are just the same as the leading modes! At least we have demonstrated that.</p>
+<p>Will this vary if we add more data?? Are these modes the same as the ones that survive using semeraros method?</p>
+<p>look at modes, reconstruct data.</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> sparse_dmd <span class="im">import</span> SparsePlots
+
+plotter <span class="op">=</span> SparsePlots(sdmd)</code></pre></div>
+<h2 id="compare-basic-flow-characterisation-before-and-after">1.6: Compare basic flow characterisation before and after</h2>
+<h2 id="compare-pdf-before-and-after">1.7: Compare pdf before and after</h2>
+
+</div>
+
+    </div>
+
+  </body>
+</html>

@@ -1,1 +1,1 @@
-gem "jekyll-pandoc", "~> 0.0.1"
+gem "jekyll-pandoc", "~> 0.0.9"
