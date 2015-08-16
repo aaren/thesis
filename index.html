@@ -104,13 +104,13 @@
       
         
           
-          <a class="sidebar-nav-item" href="/thesis/chapters/the-two-layer-fluid/">The two layer fluid</a>
+          <a class="sidebar-nav-item" href="/thesis/chapters/subtracting-waves-from-piv-data/">Subtracting waves from PIV data</a>
           
         
       
         
           
-          <a class="sidebar-nav-item" href="/thesis/chapters/subtracting-waves-from-piv-data/">Subtracting waves from PIV data</a>
+          <a class="sidebar-nav-item" href="/thesis/chapters/dynamic-mode-decomposition-of-a-gravity-current/">Dynamic Mode Decomposition of a Gravity Current</a>
           
         
       
@@ -166,7 +166,7 @@ pages: html
 <p>I found that the code below will actually delete any staged but uncommitted content from master!</p>
 <hr />
 <p>Starting from an answer on StackOverflow I wrote this post-commit hook to do this (stored at <code>.git/hooks/post-commit</code>):</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co">#!/bin/bash</span>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co">#!/bin/bash</span>
 
 <span class="co"># derived from</span>
 <span class="co"># https://stackoverflow.com/questions/23097489/git-map-directory-to-branch/23097670#23097670</span>
@@ -218,7 +218,7 @@ pages: html
 <span class="co"># clean up</span>
 <span class="kw">git</span> checkout <span class="ot">${source}</span>
 <span class="kw">git</span> branch -D <span class="ot">${build}</span>
-<span class="kw">cd</span> <span class="ot">${current_dir}</span></code></pre>
+<span class="kw">cd</span> <span class="ot">${current_dir}</span></code></pre></div>
 <p>Now when I commit a change to master, my site gets built and pushed to gh-pages.</p>
 
   </div>

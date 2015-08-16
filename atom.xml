@@ -4,7 +4,7 @@
  <title>Aaron O'Leary PhD Thesis</title>
  <link href="http://aaren.github.io/atom.xml" rel="self"/>
  <link href="http://aaren.github.io/"/>
- <updated>2015-08-08T22:56:16+01:00</updated>
+ <updated>2015-08-16T16:41:33+01:00</updated>
  <id>http://aaren.github.io</id>
  <author>
    <name>Aaron O'Leary</name>
@@ -46,7 +46,7 @@ pages: html
 &lt;p&gt;I found that the code below will actually delete any staged but uncommitted content from master!&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;Starting from an answer on StackOverflow I wrote this post-commit hook to do this (stored at &lt;code&gt;.git/hooks/post-commit&lt;/code&gt;):&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;#!/bin/bash&lt;/span&gt;
 
 &lt;span class=&quot;co&quot;&gt;# derived from&lt;/span&gt;
 &lt;span class=&quot;co&quot;&gt;# https://stackoverflow.com/questions/23097489/git-map-directory-to-branch/23097670#23097670&lt;/span&gt;
@@ -98,7 +98,7 @@ pages: html
 &lt;span class=&quot;co&quot;&gt;# clean up&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; checkout &lt;span class=&quot;ot&quot;&gt;${source}&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; branch -D &lt;span class=&quot;ot&quot;&gt;${build}&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${current_dir}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;${current_dir}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now when I commit a change to master, my site gets built and pushed to gh-pages.&lt;/p&gt;
 </content>
  </entry>
