@@ -13,8 +13,8 @@ output_pdf = thesis.pdf
 
 all: html pdf
 
-source := $(wildcard chapters/*.md)
-source += $(wildcard chapters/*.ipynb)
+source := $(wildcard chapters/0*.md)
+source += $(wildcard chapters/0*.ipynb)
 # later we might want to use this:
 # source_md = $(shell find chapters -name '*.md' | sort)
 # but this might mean reconfiguring the output destination from render
