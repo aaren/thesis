@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Turbulence data overview &middot; Aaron O'Leary PhD Thesis
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/thesis/public/css/poole.css">
+  <!-- <link rel="stylesheet" href="/thesis/public/css/syntax.css"> -->
+  <link rel="stylesheet" href="/thesis/public/css/hyde.css">
+  <!-- zenburn css from pandoc. Get it by copying from `pandoc -s -highlight zenburn something.md` -->
+  <link rel="stylesheet" href="/thesis/public/css/zenburn.css">
+  <!-- allow collapsing input cells -->
+  <link rel="stylesheet" href="/thesis/public/css/collapse.css">
+  <!-- font -->
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/thesis/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/thesis/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          TeX: { equationNumbers: { autoNumber: "all" } }
+              // can use autonumber: 'AMS'
+      });
+  </script>
+  <script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/thesis/">
+          Aaron O'Leary PhD Thesis
+        </a>
+      </h1>
+      <p class="lead">Gravity currents, non-linear waves, turbulence and stratification.</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/thesis/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/about/">About</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+
+      
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/demo/">demo</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/introduction/">Introduction</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/literature-review/">Literature Review</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/subtracting-waves-from-piv-data/">Subtracting waves from PIV data</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item active" href="/thesis/chapters/turbulence-data-overview/">Turbulence data overview</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/dynamic-mode-decomposition/">Dynamic Mode Decomposition</a>
+          
+        
+      
+        
+          
+          <a class="sidebar-nav-item" href="/thesis/chapters/the-two-layer-fluid/">The two layer fluid</a>
+          
+        
+      
+
+      <a class="sidebar-nav-item" href="https://github.com/aaren/thesis">GitHub</a>
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="chapter">
+  <h1 id="estimating-the-pdf-for-a-gravity-current">1: Estimating the pdf for a gravity current</h1>
+<p>We want to look at the probability distribution function of the velocities inside a gravity current over time.</p>
+<p>I had a go at doing this and went on a journey from line plots to kernel density estimation.</p>
+<h3 id="summary">1.0.1: Summary</h3>
+<p>These plots show the evolution of vertical velocity as a function of time behind the gravity current front passage, for various different ways of assessing the probability density function:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co">## RUN THIS LAST!!</span>
+display_all(outputs)</code></pre></div>
+<h3 id="setup">1.0.2: Setup</h3>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="op">%</span>matplotlib inline
+<span class="im">import</span> numpy <span class="im">as</span> np
+<span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt
+
+<span class="im">import</span> gc_turbulence <span class="im">as</span> g
+
+plt.rc(<span class="st">&#39;figure&#39;</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">5</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">r <span class="op">=</span> g.ProcessedRun(cache_path<span class="op">=</span>g.default_processed <span class="op">+</span> <span class="st">&#39;r13_12_16e.hdf5&#39;</span>, forced_load<span class="op">=</span><span class="va">True</span>)</code></pre></div>
+<h3 id="plots">1.0.3: Plots</h3>
+<p><strong>A single point in height and horizontal, over front relative time:</strong></p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="kw">def</span> plot_single_run(what, <span class="op">*</span>args, <span class="op">**</span>kwargs):
+    fig, ax <span class="op">=</span> plt.subplots()
+    data <span class="op">=</span> r.W_[what]
+    t <span class="op">=</span> r.T_[what]
+    ax.plot(t.T, data.T, <span class="op">*</span>args, <span class="op">**</span>kwargs)
+    ax.set_xlabel(<span class="st">&#39;time after front passage&#39;</span>)
+    ax.set_ylabel(<span class="st">&#39;vertical velocity&#39;</span>)
+    ax.set_ylim(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.04</span>)
+    <span class="cf">return</span> ax</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">iz <span class="op">=</span> <span class="dv">30</span>
+ix <span class="op">=</span> <span class="dv">50</span>
+single_point <span class="op">=</span> np.s_[iz, ix, :]
+
+single_run_single_point_plot <span class="op">=</span> plot_single_run(single_point, <span class="st">&#39;k&#39;</span>)</code></pre></div>
+<p><strong>All points at a particular height, over front relative time:</strong></p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">multi_point <span class="op">=</span> np.s_[iz, :, :]
+
+single_run_plot <span class="op">=</span> plot_single_run(multi_point, <span class="st">&#39;k&#39;</span>, linewidth<span class="op">=</span><span class="fl">0.1</span>)</code></pre></div>
+<p><strong>All points from runs with the same parameters at a particular height, over front relative time:</strong></p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">params <span class="op">=</span> g.Parameters()
+
+conditions <span class="op">=</span> <span class="bu">dict</span>(H<span class="op">=</span><span class="fl">0.25</span>, L<span class="op">=</span><span class="fl">0.25</span>, D<span class="op">=</span><span class="fl">0.25</span>, rho_ambient<span class="op">=</span><span class="fl">1.0047</span>)
+
+which <span class="op">=</span> [params.single_layer[k] <span class="op">==</span> v <span class="cf">for</span> k, v <span class="op">in</span> conditions.items()]
+where <span class="op">=</span> np.<span class="bu">all</span>(which, axis<span class="op">=</span><span class="dv">0</span>)
+runs <span class="op">=</span> params.single_layer[<span class="st">&#39;run_index&#39;</span>][where]
+<span class="bu">print</span> runs
+
+h5names <span class="op">=</span> [g.default_processed <span class="op">+</span> r <span class="op">+</span> <span class="st">&#39;.hdf5&#39;</span> <span class="cf">for</span> r <span class="op">in</span> runs]
+processed_runs <span class="op">=</span> [g.ProcessedRun(cache_path<span class="op">=</span>h5, forced_load<span class="op">=</span><span class="va">True</span>) <span class="cf">for</span> h5 <span class="op">in</span> h5names]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">fig, ax <span class="op">=</span> plt.subplots()
+colors <span class="op">=</span> (<span class="st">&#39;k&#39;</span>, <span class="st">&#39;r&#39;</span>, <span class="st">&#39;b&#39;</span>, <span class="st">&#39;g&#39;</span>, <span class="st">&#39;y&#39;</span>)
+<span class="cf">for</span> i, r <span class="op">in</span> <span class="bu">enumerate</span>(processed_runs):
+    data <span class="op">=</span> r.W_[<span class="dv">30</span>, :, :]
+    t <span class="op">=</span> r.T_[<span class="dv">30</span>, :, :]
+    ax.plot(t.T, data.T, color<span class="op">=</span>colors[i], linewidth<span class="op">=</span><span class="fl">0.1</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)
+
+ax.set_xlabel(<span class="st">&#39;time after front passage&#39;</span>)
+ax.set_ylabel(<span class="st">&#39;vertical velocity&#39;</span>)
+ax.set_ylim(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.04</span>)
+
+multi_run_plot <span class="op">=</span> ax</code></pre></div>
+<p>This last plot already looks a bit like a pdf. We want to formalise this and generate the pdf using the same axes, with colour indicating the density of points.</p>
+<p>Let's work with a single run for now. First look is to scatter plot:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">r <span class="op">=</span> g.ProcessedRun(cache_path<span class="op">=</span>g.default_processed <span class="op">+</span> <span class="st">&#39;r13_12_16e.hdf5&#39;</span>, forced_load<span class="op">=</span><span class="va">True</span>)
+scatter_plot <span class="op">=</span> plot_single_run(multi_point, <span class="st">&#39;k.&#39;</span>, alpha<span class="op">=</span><span class="fl">0.02</span>)</code></pre></div>
+<p>That doesn't tell us much except that the vertical velocity remains within fairly sharp bounds.</p>
+<h3 id="histogram">1.0.4: Histogram</h3>
+<p>We'll get a better look with a 2d histogram:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">xbins <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">1000</span>)
+ybins <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.04</span>, <span class="dv">100</span>)
+
+<span class="kw">def</span> plot_histogram(data, bins<span class="op">=</span>(xbins, ybins), where<span class="op">=</span>np.s_[:], <span class="op">**</span>kwargs):
+    H, edges <span class="op">=</span> np.histogramdd(data, bins<span class="op">=</span>bins, normed<span class="op">=</span><span class="va">True</span>)
+
+    <span class="co"># hide empty bins</span>
+    Hmasked <span class="op">=</span> np.ma.masked_where(H<span class="op">==</span><span class="dv">0</span>, H)
+    xedges, yedges <span class="op">=</span> edges[:<span class="dv">2</span>]
+    <span class="cf">if</span> <span class="op">not</span> <span class="st">&#39;levels&#39;</span> <span class="op">in</span> kwargs:
+        kwargs[<span class="st">&#39;levels&#39;</span>] <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>)
+
+    fig, ax <span class="op">=</span> plt.subplots()
+    ax.contourf(xedges[<span class="dv">1</span>:], yedges[<span class="dv">1</span>:], Hmasked.T[where], <span class="op">**</span>kwargs)
+    ax.set_xlabel(<span class="st">&#39;time after front passage&#39;</span>)
+    ax.set_ylabel(<span class="st">&#39;vertical velocity&#39;</span>)
+    <span class="cf">return</span> ax</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">data <span class="op">=</span> r.W_[multi_point].flatten()
+time <span class="op">=</span> r.T_[multi_point].flatten()
+
+single_run_histogram <span class="op">=</span> plot_histogram((time, data))</code></pre></div>
+<p>We can compute the histogram over multiple runs:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">data_multi <span class="op">=</span> np.hstack((r.W_[multi_point] <span class="cf">for</span> r <span class="op">in</span> processed_runs)).flatten()
+time_multi <span class="op">=</span> np.hstack((r.T_[multi_point] <span class="cf">for</span> r <span class="op">in</span> processed_runs)).flatten()
+
+multi_run_histogram <span class="op">=</span> plot_histogram((time_multi, data_multi))</code></pre></div>
+<p>We can see that the distribution is dominated by individual events.</p>
+<p>My previous method for making this plot was to make a 1d histogram of each time slice and then stack them all together. This was very slow. We recover my naive approach when the bin width is set to the time interval that a single time slice covers.</p>
+<p>Perhaps we should use a n-dimensional histogram (<code>np.histogramdd</code>) on the data over all heights? This doesn't actually take that much longer, the main overhead being in pulling the data from disk. This also lets us plot the pdf for any number of heights from a single run whilst only doing the computation once.</p>
+<p>We can do this and recreate the plot above:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python">w <span class="op">=</span> r.W_[:].flatten()
+t <span class="op">=</span> r.T_[:].flatten()
+z <span class="op">=</span> r.Z_[:].flatten()
+
+zbins <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="dv">50</span>)
+
+multi_dim_histogram <span class="op">=</span> plot_histogram((t, w, z), bins<span class="op">=</span>(xbins, ybins, zbins),
+                                     where<span class="op">=</span><span class="dv">20</span>, levels<span class="op">=</span>np.linspace(<span class="dv">0</span>, <span class="dv">100</span>))</code></pre></div>
+<p>All that histogramming does is put a grid over the data and count the number of data points inside each grid box. We are just digitising the continuous field of data. The histogram approximates a pdf, but it is not neccesarily a good estimator for one.</p>
+<p>A problem with making histograms is that we don't always know what to set the bin width at. For our coordinate variables x, z, t it is easy - we just make sure that the bins are wider than the sampling interval.</p>
+<p>However for our random variables u, v, w it is more difficult as they are not uniformly distributed. It might be the case that our pdf will approach a smooth distribution in the limit of many ensembles, but for small numbers of ensembles we are dominated by individual events which we do not know how to bin.</p>
+<h3 id="kernel-density-estimation">1.0.5: Kernel Density Estimation</h3>
+<p>http://stackoverflow.com/questions/21918529/multivariate-kernel-density-estimation-in-python</p>
+<p>http://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/</p>
+<p>http://scikit-learn.org/stable/modules/density.html</p>
+<p>A solution to the problem of rigid bin widths is <em>Kernel Density Estimation</em> (KDE). A simple KDE is to place a box of width w around each data point, with the data point at the centre. We then sum all the boxes to get the pdf.</p>
+<p>KDE works well when we don't know what the range of the bins should be (i.e. most of the time) but it is still dependent on w - the <em>bandwidth</em>, which has to be chosen carefully.</p>
+<p>Too large or small a bandwidth will lead to over or under smoothing, which can lead to radically different indications of the underlying pdf.</p>
+<p>Here, we might choose a bandwidth of 0.001 for w and 0.05 for t. Not all implementations of KDE allow us to specify a bandwidth for multiple variables - we can get around this by scaling one of the axes such that the bandwidth applies to both variables.</p>
+<p>The shape of the box (the kernel) that we place at each data point can be altered as well. A simple choice is a tophat function, but we could use anything. A natural choice is a Gaussian. This is complicated in more than one dimension as each dimension might have a different optimal kernel shape and a different optimal bandwidth!</p>
+<p>It is important to consider what it is that we want the estimation to give us. The KDE can fill in gaps in our observed data. Our data contains natural gaps due to the occurence of discrete events - the large scale eddies in the turbulence. We don't expect that these events are localised in space, so in many realisations of a gravity current we would expect a smooth distribution.</p>
+<p>The main problem with KDE compared to making a histogram is that a naive implementation can be <em>really slow</em> (<span class="math inline"><em>N</em><sup>2</sup></span> time).</p>
+<p>Here's how we set it up, with a plotting function:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co"># can&#39;t have multi dim bandwidth so we can scale the t here</span>
+<span class="co"># and undo at the end. This might be equivalent to changing the</span>
+<span class="co"># metric of the kd-tree but I&#39;m not sure.</span>
+w_bandwidth <span class="op">=</span> <span class="fl">0.002</span>
+t_bandwidth <span class="op">=</span> <span class="fl">0.05</span>
+<span class="co"># scaling to use on t to make bandwidth applicable</span>
+ts <span class="op">=</span> w_bandwidth <span class="op">/</span> t_bandwidth
+bandwidth <span class="op">=</span> w_bandwidth
+
+
+<span class="co"># extract some data and rescale it</span>
+w <span class="op">=</span> r.W_[<span class="dv">30</span>, :, :].flatten()
+t <span class="op">=</span> r.T_[<span class="dv">30</span>, :, :].flatten() <span class="op">*</span> ts
+data <span class="op">=</span> np.vstack((w, t))
+
+<span class="co"># construct regular grid of coordinates to evaluate at</span>
+gt <span class="op">=</span> xbins <span class="op">*</span> ts
+gw <span class="op">=</span> ybins
+GW, GT <span class="op">=</span> np.meshgrid(gw, gt)
+coords <span class="op">=</span> np.vstack((GW.flatten(), GT.flatten()))
+
+<span class="kw">def</span> plot_kde(pdf, levels<span class="op">=</span>np.linspace(<span class="dv">0</span>, <span class="dv">150</span>)):
+    <span class="co">&quot;&quot;&quot;Contour plot over given levels.&quot;&quot;&quot;</span>
+    fig, ax <span class="op">=</span> plt.subplots()
+    <span class="co"># mask equivalent to where the histogram has empty bins</span>
+    pdf <span class="op">=</span> np.ma.masked_where(pdf <span class="op">&lt;</span> <span class="dv">1</span>, pdf)
+    ax.contourf(GT <span class="op">/</span> ts, GW, pdf.reshape(GT.shape), levels<span class="op">=</span>levels)
+    ax.set_xlabel(<span class="st">&#39;time after front passage&#39;</span>)
+    ax.set_ylabel(<span class="st">&#39;vertical velocity&#39;</span>)
+    <span class="cf">return</span> ax</code></pre></div>
+<p>Scipy has a built in gaussian KDE, which takes a nice long time O(N^2) with our data:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> scipy <span class="im">import</span> stats
+
+scipy_kde <span class="op">=</span> stats.gaussian_kde(data, bw_method<span class="op">=</span>bandwidth)
+<span class="op">%</span>time scipy_pdf <span class="op">=</span> scipy_kde.evaluate(coords)
+scipy_kde_plot <span class="op">=</span> plot_kde(scipy_pdf)</code></pre></div>
+<p>I'm not sure why it looks so rubbish - I suspect something to do with the bandwidth choice. Also, this method somehow fully utilises 10 cores (of a 24 core machine) without me telling it to (look at the timing output)- this happens when run in a .py script as well. It doesn't really matter because there is a much more efficient way to compute the KDE:</p>
+<h4 id="tree-based-kde">1.0.5.1: Tree-based KDE</h4>
+<p>We can get a significant speed up in the computation by making use of a KD-Tree of the data points. With some tolerance on the precision of our estimate we then evaluate the kernel sum only over points that are geometrically close. This is what the implementation in Scikit-learn does:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KernelDensity
+
+<span class="co"># set rtol to allow 0.1% error</span>
+kde_sk <span class="op">=</span> KernelDensity(bandwidth<span class="op">=</span>bandwidth, rtol<span class="op">=</span><span class="fl">1E-3</span>)
+<span class="op">%</span>time kde_sk.fit(data.T)
+<span class="op">%</span>time log_pdf <span class="op">=</span> kde_sk.score_samples(coords.T)
+pdf_sk <span class="op">=</span> np.exp(log_pdf)
+sklearn_kde_plot <span class="op">=</span> plot_kde(pdf_sk)</code></pre></div>
+<p>We can do this over multiple runs:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="co">## this takes a long time. like half an hour long.</span>
+w <span class="op">=</span> np.hstack((r.W_[multi_point] <span class="cf">for</span> r <span class="op">in</span> processed_runs)).flatten()
+t <span class="op">=</span> np.hstack((r.T_[multi_point] <span class="cf">for</span> r <span class="op">in</span> processed_runs)).flatten() <span class="op">*</span> ts
+data <span class="op">=</span> np.vstack((w, t))
+
+<span class="op">%</span>time kde_sk.fit(data.T)
+<span class="op">%</span>time log_pdf_multi <span class="op">=</span> kde_sk.score_samples(coords.T)
+pdf_sk_multi <span class="op">=</span> np.exp(log_pdf_multi)
+sklearn_kde_plot_multi <span class="op">=</span> plot_kde(pdf_sk_multi)</code></pre></div>
+<hr />
+<h3 id="performance">1.0.6: Performance</h3>
+<p>We've been working with a subset of data from a single run. Here's the number of points that we might be working with:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="bu">print</span> <span class="st">&quot;Size of our example data: &quot;</span>, r.W_[<span class="dv">30</span>, :, :].size
+<span class="bu">print</span> <span class="st">&quot;Size of a single component of a full run: &quot;</span>, r.W_[:, :, :].size
+
+components <span class="op">=</span> (r.U_, r.V_, r.W_, r.X_, r.Z_, r.T_)
+<span class="bu">print</span> <span class="st">&quot;potential number of dimensions: &quot;</span>, <span class="bu">len</span>(components)
+<span class="bu">print</span> <span class="st">&quot;potential number of points from 10 runs: &quot;</span>, r.W_.size <span class="op">*</span> <span class="bu">len</span>(components) <span class="op">*</span> <span class="dv">10</span></code></pre></div>
+<p>This might take some time to execute! A way of saving the generated models might be useful. Luckily, we can <a href="http://scikit-learn.org/stable/tutorial/basic/tutorial.html#model-persistence">save our model</a> using <code>pickle</code> if we need to.</p>
+<p>The tree-based KDE computation is sensitive to the kernel bandwidth. The performance benefit of the tree approach comes from only considering training points that are close to a query point (the 'training' points are the original data; the 'query' points are where we evaluate the kde). What 'close' means is going to vary with varying kernel width.</p>
+<p>We've used a kernel bandwidth of 0.05 in time and 0.002 in vertical velocity. The time sampling interval is 0.01. Vertical velocities exist in the range [-0.03, 0.04]</p>
+<hr />
+<h3 id="bandwidth-selection">1.0.7: Bandwidth selection</h3>
+<p>We can search for the best estimator for our data across a parameter space of inputs. As our estimator is only dependent on the bandwidth and we have scaled our axes such that this is the samme in both dimensions, we need to search over a 1d array of inputs.</p>
+<p>We optimise with the score of the estimator, which for our KDE is the integrated log probability of the distribution model.</p>
+<p>If we fit (<em>train</em>) an estimator to all of the data, we can easily tune the bandwidth until we get the best score. However, this estimator would not be useful on new data - this is <em>overfitting</em>. Since we have a vast quantity of data that we cannot hope to train an estimator on in its entireity we need to find a way to overcome this problem.</p>
+<p>Fitting using Cross Validation is a way to overcome this. The simplest version (leave-one-out) is to split the data into <span class="math inline"><em>k</em></span> folds, train the estimator on <span class="math inline"><em>k</em> − 1</span> of them and validate on the remainder. We do this over all permutations and take best scoring estimator.</p>
+<p>Scikit-learn implements a cross validation grid search:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> sklearn.grid_search <span class="im">import</span> GridSearchCV
+
+grid <span class="op">=</span> GridSearchCV(KernelDensity(rtol<span class="op">=</span><span class="fl">1E-4</span>),  <span class="co"># allow 0.01% errors</span>
+                   {<span class="st">&#39;bandwidth&#39;</span>: np.logspace(<span class="op">-</span><span class="dv">4</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">20</span>)},
+                   cv<span class="op">=</span><span class="dv">5</span>,       <span class="co"># k, number of folds</span>
+                   n_jobs<span class="op">=</span><span class="dv">20</span>)  <span class="co"># multi core!</span>
+
+<span class="co"># take some subset of the data and make it (N, d) in shape</span>
+data <span class="op">=</span> r.W_[<span class="dv">30</span>, :, <span class="dv">1000</span>:<span class="dv">1200</span>].flatten()[<span class="va">None</span>].T
+<span class="co"># search for the optimum estimator for the data over the grid:</span>
+<span class="op">%</span>time grid.fit(data)
+<span class="bu">print</span> <span class="st">&quot;Optimum bandwidth 1E-4 error: &quot;</span>, grid.best_params_
+<span class="co"># see how higher allowable error changes the bandwidth:</span>
+grid.rtol <span class="op">=</span> <span class="fl">1E-2</span>
+<span class="op">%</span>time grid.fit(data)
+<span class="bu">print</span> <span class="st">&quot;Optimum bandwidth 1E-2 error: &quot;</span>, grid.best_params_</code></pre></div>
+<hr />
+<h3 id="bayesian-blocks">1.0.8: Bayesian blocks</h3>
+<p>It is worth mentioning another approach, based on applying a variable bin width across the data. The Bayesian Blocks algorithm computes a fitness function that depends only on the width of each bin and the number of points in it. We then evaluate the fitness function over all bin combinations and select the best one.</p>
+<p>The advantage of this method is that it will select the quantitatively best set of bin widths for the data.</p>
+<p>The problem with this method is that the computation time scales with the number of points as <span class="math inline">2<sup><em>N</em></sup></span>. Scargle showed that this time can be reduced to <span class="math inline"><em>N</em><sup>2</sup></span> whilst still guranteeing the best choice. This would be competitive with the scipy kde above - however, a mature multi-dimensional implementation does not exist (but there are ideas using Voronoi cells), making this unsuitable for our problem.</p>
+<p>http://jakevdp.github.io/blog/2012/09/12/dynamic-programming-in-python/</p>
+<p>That said here is an example using an implementation in astroML:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> astroML.plotting <span class="im">import</span> hist
+
+fig, axes <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">2</span>)
+
+<span class="co"># consider a sub sample of the data</span>
+data <span class="op">=</span> r.W_[<span class="dv">30</span>, :, <span class="dv">1500</span>:<span class="dv">1750</span>].flatten()
+
+h0 <span class="op">=</span> axes[<span class="dv">0</span>].hist(data, bins<span class="op">=</span>np.linspace(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.04</span>, <span class="dv">100</span>), normed<span class="op">=</span><span class="va">True</span>)
+h1 <span class="op">=</span> hist(data, bins<span class="op">=</span><span class="st">&#39;blocks&#39;</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>], normed<span class="op">=</span><span class="va">True</span>)
+
+axes[<span class="dv">0</span>].set_xlim(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.04</span>)
+axes[<span class="dv">0</span>].set_title(<span class="st">&#39;regular bins&#39;</span>)
+axes[<span class="dv">1</span>].set_xlim(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.04</span>)
+axes[<span class="dv">1</span>].set_title(<span class="st">&#39;bayesian blocks&#39;</span>)
+
+fig.tight_layout()</code></pre></div>
+<p>This method might be suitable for considering the distribution of subsets of our data. For example, we might wish to see whether the velocity data is distributed in a different way in different sections of the flow.</p>
+<hr />
+<p>How we display the figures at the top:</p>
+<div class="sourceCode"><pre class="sourceCode python input"><code class="sourceCode python"><span class="im">from</span> IPython.display <span class="im">import</span> display
+
+outputs <span class="op">=</span> [(single_run_single_point_plot, <span class="st">&#39;one run, single point&#39;</span>),
+           (single_run_plot, <span class="st">&#39;one run, multiple points&#39;</span>),
+           (single_run_histogram, <span class="st">&#39;one run, histogram&#39;</span>),
+           (sklearn_kde_plot, <span class="st">&#39;one run, kernel density estimate&#39;</span>),
+           (multi_run_plot, <span class="st">&#39;multiple runs&#39;</span>),
+           (multi_run_histogram, <span class="st">&#39;multiple runs histogram&#39;</span>),
+           (sklearn_kde_plot_multi, <span class="st">&#39;multiple runs kde&#39;</span>)]
+
+<span class="kw">def</span> display_all(outputs):
+    <span class="cf">for</span> i, (plot, title) <span class="op">in</span> <span class="bu">enumerate</span>(outputs):
+        plot.set_title(title)
+        plot.figure.set_size_inches((<span class="dv">12</span>, <span class="dv">2</span>))
+        plot.figure.tight_layout()
+        display(plot.figure)</code></pre></div>
+
+</div>
+
+    </div>
+
+  </body>
+</html>
