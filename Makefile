@@ -8,6 +8,7 @@ rendered = build/rendered
 which_rendered = *.md
 
 output_pdf = thesis.pdf
+output_tex = thesis.tex
 
 .PHONY: render all html pdf tex clean docx serve pages
 
@@ -25,6 +26,7 @@ ifneq ("$(chapter)", "")
 	source = $(chapter)
 	fname = "$(basename $(notdir $(chapter)))"
 	output_pdf = "$(fname).pdf"
+	output_tex = "$(fname).tex"
 	which_rendered = "$(fname).md"
 endif
 
@@ -63,6 +65,38 @@ pdf: render
 	@echo "Building ${output_pdf}..."
 	@mkdir -p build/figures
 	@abbreviations=$$(pandoc abbreviations.md --to latex); \
+	packages="$$(pandoc $(metadata) \
+		  		 --template ${latex_build}/packages.tex \
+				 --to latex)"; \
+	title="$$(pandoc $(metadata) \
+		      --template ${latex_build}/title.tex \
+			  --to latex)"; \
+	prelims="$$(pandoc $(metadata) \
+				--template ${latex_build}/prelims.tex \
+				--variable=abbreviations:"$$abbreviations" \
+				--to latex)"; \
+	postlims="$$(pandoc $(metadata) \
+	             --template ${latex_build}/postlims.tex \
+				 --to latex)"; \
+	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
+		--template ${latex_build}/Thesis.tex \
+		--chapter \
+		--variable=packages:"$$packages" \
+		--variable=title:"$$title" \
+		--variable=prelims:"$$prelims" \
+		--variable=postlims:"$$postlims" \
+        --filter ${latex_build}/filters.py
+
+tex: render
+	@echo "Building ${output_tex}..."
+	@mkdir -p build/figures
+	@abbreviations=$$(pandoc abbreviations.md --to latex); \
+	packages="$$(pandoc $(metadata) \
+		  		 --template ${latex_build}/packages.tex \
+				 --to latex)"; \
+	titlepage="$$(pandoc $(metadata) \
+		          --template ${latex_build}/title.tex \
+			      --to latex)"; \
 	prelims="$$(pandoc $(metadata) \
 				--template ${latex_build}/prelims.tex \
 				--variable=abbreviations:"$$abbreviations" \
@@ -72,33 +106,16 @@ pdf: render
 				 --to latex)"; \
 
 ifneq ("$(chapter)", "")
+	title=""
 	prelims=""
 	postlims=""
 endif
 
-	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
+	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_tex} \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
-		--variable=prelims:"$$prelims" \
-		--variable=postlims:"$$postlims" \
-        --filter ${latex_build}/filters.py
-
-chapter: render
-	pandoc $(metadata) ${rendered}/05-turbulence-wave-subtraction.md -o chapter.pdf \
-		--template ${latex_build}/Thesis.tex \
-		--chapter \
-        --filter ${latex_build}/filters.py
-
-tex: render
-	@abbreviations=$$(pandoc abbreviations.md --to latex); \
-	prelims="$$(pandoc $(metadata) \
-				--template ${latex_build}/prelims.tex \
-				--variable=abbreviations:"$$abbreviations" \
-				--to latex)"; \
-	postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"; \
-	pandoc $(metadata) ${rendered}/*.md -o thesis.tex \
-		--template ${latex_build}/Thesis.tex \
-		--chapter \
+		--variable=packages:"$$packages" \
+		--variable=titlepage:"$$titlepage" \
 		--variable=prelims:"$$prelims" \
 		--variable=postlims:"$$postlims" \
         --filter ${latex_build}/filters.py
