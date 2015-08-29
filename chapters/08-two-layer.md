@@ -50,6 +50,7 @@ interfacial wavefield from one of these experiments in a hovmoller
 plot.
 
 ```{.python .input  n=5}
+## fig:example-wavefield
 r = runs[2]
 
 plt.contourf(r.waves.x, r.waves.t, r.waves.z, cmap=plt.cm.bone_r, levels=np.linspace(0.45, 0.65))
@@ -93,6 +94,8 @@ run can be seen in @fig:all-wavefields.
 straightening up first.*
 
 ```{.python .input  n=6}
+## fig:all-wavefields
+
 fig, axes = plt.subplots(ncols=3, nrows=3, figsize=(6, 6))
 
 for r, ax in zip(runs, axes.flatten()):
@@ -177,6 +180,8 @@ rotation and half way along the position axis, as shown in
 @fig:radon-circle.
 
 ```{.python .input  n=7}
+## fig:radon-circle
+
 from skimage.transform import radon
 
 time = np.linspace(0, 60, 300)
@@ -289,6 +294,8 @@ The ridgelet transform, summed over a subset of the scales, is shown
 in @fig:ridgelet-example.
 
 ```{.python .input  n=10}
+## fig:ridgelet-example
+
 position = np.arange(rt.shape[1])
 position_slice = slice(20, 250)
 #position_slice = slice(0, None)
@@ -457,6 +464,8 @@ all_transforms = [[ridgelet_transform(r, theta=theta, wavelet=W()) for W in Rick
 ```
 
 ```{.python .input  n=14}
+## fig:ridgelet-wavelet-comparison
+
 fig, axes = plt.subplots(nrows=len(runs), ncols=4, figsize=(12, 8))
 
 for i, transforms in enumerate(all_transforms):
@@ -505,6 +514,8 @@ ricker_ridgelets = [ridgelet_transform(r, theta=theta, wavelet=Ricker()) for r i
 ```
 
 ```{.python .input  n=16}
+## fig:ricker-ridgelets
+
 fig, axes = plt.subplots(ncols=len(runs))
 
 for ax, ridge in zip(axes, ricker_ridgelets):
@@ -876,6 +887,8 @@ The results of wave detection using the above method are shown in
 @fig:all-detection.
 
 ```{.python .input  n=23}
+## fig:all-detection
+
 def plot_waves(r, ax, xlim, tlim, res):
 
     x = np.linspace(*xlim, num=res)
@@ -959,6 +972,8 @@ for r in runs:
 amplitude for each wave detected in a run and for each run.
 
 ```{.python .input  n=26}
+## fig:speed-vs-amplitude
+
 for i, r in enumerate(runs):
     plt.plot(r.speeds, r.amplitudes, '-o')
     plt.text(r.speeds[0], r.amplitudes[0], i)

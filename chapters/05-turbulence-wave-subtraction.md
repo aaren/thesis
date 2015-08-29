@@ -97,7 +97,9 @@ There are several wave frequencies represented: there apears to be a
 harmonic series beginning at ~0.1Hz, along with a cluster of
 frequencies around 1Hz.
 
-```{.python .input #fig:presignal-fft n=4}
+```{.python .input n=4}
+## fig:presignal-fft
+
 presignal = r.U[-1, 0, :3000]
 
 fft = np.fft.rfft(presignal)
@@ -190,7 +192,9 @@ in frequency.
 
 Our improved power spectrum is shown in @fig:extended-power.
 
-```{.python .input #fig:extended-power-shallow n=6}
+```{.python .input n=6}
+## fig:extended-power-shallow
+
 def plot_smooth_fft(signal, **kwargs):
     window = kwargs.pop('window', 'hanning')
     size = kwargs.pop('size', 2**15)
@@ -259,7 +263,9 @@ $$
 Using this relation we get a much improved match between the observed and
 predicted peak locations, as shown in @fig:extended-power-standing.
 
-```{.python .input #fig:extended-power-standing- n=7}
+```{.python .input n=7}
+## fig:extended-power-standing
+
 L = 5.50
 H = 0.25
 g = 9.81
@@ -365,7 +371,7 @@ plt.xlim(0.01, 2.5)
 ```
 
 ```{.python .input  n=9}
-# fig:window-bandwidth
+## fig:window-bandwidth
 # 
 
 N = np.arange(1, 60)
@@ -423,7 +429,9 @@ frequency components.
 This background is most problematic at lower frequencies, certainly
 for the first three modes (see @fig:fft-mean-mean).
 
-```{.python .input #fig:fft-mean-mean n=10}
+```{.python .input n=10}
+## fig:fft-mean-mean
+
 plot_smooth_fft(r.U[:, :, :8000].mean(axis=0).mean(axis=0))
 #plt.yscale('log')
 plt.xscale('linear')
@@ -1132,8 +1140,8 @@ couple of coefficients.
   coherent signal than the DCT (which has an even extension at the
   boundaries).
 
-```{.python .input #fig:dft-dct-ramp n=23}
-## fig:dft-dct-comp-ramp
+```{.python .input n=23}
+## fig:dft-dct-ramp
 # Approximation of a ramp with the DFT and the DCT
 ##
 
@@ -1233,7 +1241,9 @@ def butterpass(signal, cutoff, high_cutoff=False, axis=-1, order=2):
     return rdata
 ```
 
-```{.python .input #fig:dft-dct-data n=25}
+```{.python .input n=25}
+## fig:dft-dct-data
+
 def plot_dft_dct_comp_data(cutoff=0.6, upper=0.07, tstride=10):
     dct = fftpack.dct(brickpass(r.U[:].mean(axis=0), cutoff), axis=0) / 2
     dft = fftpack.rfft(brickpass(r.U[:].mean(axis=0), cutoff), axis=0)
@@ -1325,7 +1335,9 @@ npt.assert_array_almost_equal(mean_waves(rsignal), fft_waves(rsignal, 1)[0], dec
 npt.assert_array_almost_equal(mean_waves(rsignal), dct_waves(rsignal, 1)[0], decimal=15)
 ```
 
-```{.python .input #fig:xvar-standing-waves n=27}
+```{.python .input n=27}
+## fig:xvar-standing-waves
+
 fig, axes = plt.subplots(nrows=4, ncols=2, sharex=True, sharey=True, figsize=(8, 8))
 
 contour_fft(rsignal, ax=axes[0, 0], xlim=(0.6, 2.5))
@@ -1662,7 +1674,7 @@ processing described here. We attribute the background to the initial PIV
 analysis and subtract it from the data.
 
 ```{.python .input  n=35}
-##fig:piv-background
+## fig:piv-background
 
 lvl = np.linspace(-0.003, 0.003, 30)
 
