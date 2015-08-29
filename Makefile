@@ -21,6 +21,23 @@ source += $(wildcard chapters/0*.ipynb)
 # but this might mean reconfiguring the output destination from render
 # and the symlinking into the jekyll build
 
+abbreviations = abbreviations="$$(pandoc abbreviations.md --to latex)"
+packages = packages="$$(pandoc $(metadata) --template ${latex_build}/packages.tex --to latex)"
+title = title="$$(pandoc $(metadata) --template ${latex_build}/title.tex --to latex)"
+prelims = prelims="$$(pandoc $(metadata) --template ${latex_build}/prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"
+postlims = postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"
+define pandoc
+	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
+		--template ${latex_build}/Thesis.tex \
+		--chapter \
+		--variable=packages:"$$packages" \
+		--variable=title:"$$title" \
+		--variable=prelims:"$$prelims" \
+		--variable=postlims:"$$postlims" \
+        --filter ${latex_build}/filters.py
+endef
+
+
 # single chapter creation mode (set chapter=chapters/blah.md on command line)
 ifneq ("$(chapter)", "")
 	source = $(chapter)
@@ -64,28 +81,12 @@ pages: html
 pdf: render
 	@echo "Building ${output_pdf}..."
 	@mkdir -p build/figures
-	@abbreviations=$$(pandoc abbreviations.md --to latex); \
-	packages="$$(pandoc $(metadata) \
-		  		 --template ${latex_build}/packages.tex \
-				 --to latex)"; \
-	title="$$(pandoc $(metadata) \
-		      --template ${latex_build}/title.tex \
-			  --to latex)"; \
-	prelims="$$(pandoc $(metadata) \
-				--template ${latex_build}/prelims.tex \
-				--variable=abbreviations:"$$abbreviations" \
-				--to latex)"; \
-	postlims="$$(pandoc $(metadata) \
-	             --template ${latex_build}/postlims.tex \
-				 --to latex)"; \
-	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
-		--template ${latex_build}/Thesis.tex \
-		--chapter \
-		--variable=packages:"$$packages" \
-		--variable=title:"$$title" \
-		--variable=prelims:"$$prelims" \
-		--variable=postlims:"$$postlims" \
-        --filter ${latex_build}/filters.py
+	$(packages); \
+	$(title); \
+	$(abbreviations); \
+	$(prelims); \
+	$(postlims); \
+	$(pandoc)
 
 tex: render
 	@echo "Building ${output_tex}..."
