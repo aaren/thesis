@@ -26,6 +26,20 @@ packages = packages="$$(pandoc $(metadata) --template ${latex_build}/packages.te
 title = title="$$(pandoc $(metadata) --template ${latex_build}/title.tex --to latex)"
 prelims = prelims="$$(pandoc $(metadata) --template ${latex_build}/prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"
 postlims = postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"
+
+# single chapter creation mode (set chapter=chapters/blah.md on command line)
+ifneq ("$(chapter)", "")
+	source = $(chapter)
+	fname = "$(basename $(notdir $(chapter)))"
+	output_pdf = "$(fname).pdf"
+	output_tex = "$(fname).tex"
+	which_rendered = "$(fname).md"
+
+	title = title=""
+	prelims = prelims=""
+	postlims = postlims=""
+endif
+
 define pandoc
 	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
 		--template ${latex_build}/Thesis.tex \
@@ -37,15 +51,6 @@ define pandoc
         --filter ${latex_build}/filters.py
 endef
 
-
-# single chapter creation mode (set chapter=chapters/blah.md on command line)
-ifneq ("$(chapter)", "")
-	source = $(chapter)
-	fname = "$(basename $(notdir $(chapter)))"
-	output_pdf = "$(fname).pdf"
-	output_tex = "$(fname).tex"
-	which_rendered = "$(fname).md"
-endif
 
 render: ${source}
 	@echo $(source)
