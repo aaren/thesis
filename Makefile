@@ -41,7 +41,7 @@ ifneq ("$(chapter)", "")
 endif
 
 define pandoc
-	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_pdf} \
+	pandoc $(metadata) ${rendered}/${which_rendered} -o $(1) \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
 		--variable=packages:"$$packages" \
@@ -91,7 +91,7 @@ pdf: render
 	$(abbreviations); \
 	$(prelims); \
 	$(postlims); \
-	$(pandoc)
+	$(call pandoc,$(output_pdf))
 
 tex: render
 	@echo "Building ${output_tex}..."
