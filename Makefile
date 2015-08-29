@@ -22,10 +22,10 @@ source += $(wildcard chapters/0*.ipynb)
 # and the symlinking into the jekyll build
 
 abbreviations = abbreviations="$$(pandoc abbreviations.md --to latex)"
-packages = packages="$$(pandoc $(metadata) --template ${latex_build}/packages.tex --to latex)"
-title = title="$$(pandoc $(metadata) --template ${latex_build}/title.tex --to latex)"
-prelims = prelims="$$(pandoc $(metadata) --template ${latex_build}/prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"
-postlims = postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.tex --to latex)"
+packages = packages="$$(pandoc $(metadata) --template $(latex_build)/packages.tex --to latex)"
+title = title="$$(pandoc $(metadata) --template $(latex_build)/title.tex --to latex)"
+prelims = prelims="$$(pandoc $(metadata) --template $(latex_build)/prelims.tex --variable=abbreviations:"$$abbreviations" --to latex)"
+postlims = postlims="$$(pandoc $(metadata) --template $(latex_build)/postlims.tex --to latex)"
 
 # single chapter creation mode (set chapter=chapters/blah.md on command line)
 ifneq ("$(chapter)", "")
@@ -49,30 +49,30 @@ define pandoc
 	$(abbreviations); \
 	$(prelims); \
 	$(postlims); \
-	pandoc $(metadata) ${rendered}/${which_rendered} -o $(1) \
-		--template ${latex_build}/Thesis.tex \
+	pandoc $(metadata) $(rendered)/$(which_rendered) -o $(1) \
+		--template $(latex_build)/Thesis.tex \
 		--chapter \
 		--variable=packages:"$$packages" \
 		--variable=title:"$$title" \
 		--variable=prelims:"$$prelims" \
 		--variable=postlims:"$$postlims" \
-        --filter ${latex_build}/filters.py
+        --filter $(latex_build)/filters.py
 endef
 
 
-render: ${source}
+render: $(source)
 	@echo $(source)
-	@mkdir -p ${rendered}
+	@mkdir -p $(rendered)
 	@echo "Copying images..."
 	@rsync -a chapters/figures build/rendered/
 	@echo "Rendering notebooks..."
-ifneq ("${source}", "")
-	@$(foreach f, ${source}, notedown ${f} --render --output ${rendered}/$(basename $(notdir ${f})).md;)
+ifneq ("$(source)", "")
+	@$(foreach f, $(source), notedown $(f) --render --output $(rendered)/$(basename $(notdir $(f))).md;)
 endif
 
 html: render
 	@echo "Building html..."
-	@cd ${html_build} && jekyll build && cd -
+	@cd $(html_build) && jekyll build && cd -
 
 # build _site and push diff to gh-pages branch
 # using a temporary git repo to rebase the changes onto
@@ -84,7 +84,7 @@ pages: html
 	git remote add origin $${root_dir} && \
 	git pull --quiet origin gh-pages && \
 	git rm -rf --cached --quiet * && \
-	rsync -a $${root_dir}/${html_build}/_site/ . && \
+	rsync -a $${root_dir}/$(html_build)/_site/ . && \
 	git add -A && git commit --quiet -m "update gh-pages" && \
 	git push --quiet origin master:gh-pages
 
@@ -102,7 +102,7 @@ docx: render
 	@$(call pandoc,"$(output).docx")
 
 clean:
-	rm -rf ${rendered}/*
+	rm -rf $(rendered)/*
 
 serve:
-	cd ${html_build} && jekyll serve --detach --watch && cd -
+	cd $(html_build) && jekyll serve --detach --watch && cd -
