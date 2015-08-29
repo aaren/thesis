@@ -102,7 +102,7 @@ docx: render
 	@$(call pandoc,"$(output).docx")
 
 clean:
-	rm -rf $(rendered)/*
+	rm -rf $(rendered)/* ./*pdf ./*tex ./*docx
 
 serve:
 	cd $(html_build) && jekyll serve --detach --watch && cd -
