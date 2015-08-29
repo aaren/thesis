@@ -91,15 +91,15 @@ pages: html
 pdf: render
 	@echo "Building $(output).pdf..."
 	@mkdir -p build/figures
-	$(call pandoc,"$(output).pdf")
+	@$(call pandoc,"$(output).pdf")
 
 tex: render
 	@echo "Building $(output).tex..."
-	$(call pandoc,"$(output).tex")
+	@$(call pandoc,"$(output).tex")
 
 docx: render
 	@echo "Building $(output).docx..."
-	$(call pandoc,"$(output).docx")
+	@$(call pandoc,"$(output).docx")
 
 clean:
 	rm -rf ${rendered}/*
