@@ -7,8 +7,8 @@ html_build = build/html
 rendered = build/rendered
 which_rendered = *.md
 
-output_pdf = thesis.pdf
-output_tex = thesis.tex
+# the base name of the output file from pandoc (e.g. thesis.pdf, thesis.tex)
+output = thesis
 
 .PHONY: render all html pdf tex clean docx serve pages
 
@@ -31,8 +31,7 @@ postlims = postlims="$$(pandoc $(metadata) --template ${latex_build}/postlims.te
 ifneq ("$(chapter)", "")
 	source = $(chapter)
 	fname = "$(basename $(notdir $(chapter)))"
-	output_pdf = "$(fname).pdf"
-	output_tex = "$(fname).tex"
+	output = $(fname)
 	which_rendered = "$(fname).md"
 
 	title = title=""
@@ -90,16 +89,17 @@ pages: html
 	git push --quiet origin master:gh-pages
 
 pdf: render
-	@echo "Building ${output_pdf}..."
+	@echo "Building $(output).pdf..."
 	@mkdir -p build/figures
-	$(call pandoc,$(output_pdf))
+	$(call pandoc,"$(output).pdf")
 
 tex: render
-	@echo "Building ${output_tex}..."
-	$(call pandoc,$(output_tex))
+	@echo "Building $(output).tex..."
+	$(call pandoc,"$(output).tex")
 
-docx:
-	pandoc $(metadata) test.md -o test.docx
+docx: render
+	@echo "Building $(output).docx..."
+	$(call pandoc,"$(output).docx")
 
 clean:
 	rm -rf ${rendered}/*
