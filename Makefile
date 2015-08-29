@@ -40,7 +40,16 @@ ifneq ("$(chapter)", "")
 	postlims = postlims=""
 endif
 
+# remember each line in the recipe is executed in a *new* shell,
+# so if we want to pass variables around we have to make a long
+# single line command. This is using gmake 3.81, which doesn't
+# have .ONESHELL.
 define pandoc
+	$(packages); \
+	$(title); \
+	$(abbreviations); \
+	$(prelims); \
+	$(postlims); \
 	pandoc $(metadata) ${rendered}/${which_rendered} -o $(1) \
 		--template ${latex_build}/Thesis.tex \
 		--chapter \
@@ -80,27 +89,13 @@ pages: html
 	git add -A && git commit --quiet -m "update gh-pages" && \
 	git push --quiet origin master:gh-pages
 
-# remember each line in the recipe is executed in a *new* shell,
-# so if we want to pass variables around we have to make a long
-# single line command.
 pdf: render
 	@echo "Building ${output_pdf}..."
 	@mkdir -p build/figures
-	$(packages); \
-	$(title); \
-	$(abbreviations); \
-	$(prelims); \
-	$(postlims); \
 	$(call pandoc,$(output_pdf))
 
 tex: render
 	@echo "Building ${output_tex}..."
-	@mkdir -p build/figures
-	$(packages); \
-	$(title); \
-	$(abbreviations); \
-	$(prelims); \
-	$(postlims); \
 	$(call pandoc,$(output_tex))
 
 docx:
