@@ -96,35 +96,12 @@ pdf: render
 tex: render
 	@echo "Building ${output_tex}..."
 	@mkdir -p build/figures
-	@abbreviations=$$(pandoc abbreviations.md --to latex); \
-	packages="$$(pandoc $(metadata) \
-		  		 --template ${latex_build}/packages.tex \
-				 --to latex)"; \
-	titlepage="$$(pandoc $(metadata) \
-		          --template ${latex_build}/title.tex \
-			      --to latex)"; \
-	prelims="$$(pandoc $(metadata) \
-				--template ${latex_build}/prelims.tex \
-				--variable=abbreviations:"$$abbreviations" \
-				--to latex)"; \
-	postlims="$$(pandoc $(metadata) \
-	             --template ${latex_build}/postlims.tex \
-				 --to latex)"; \
-
-ifneq ("$(chapter)", "")
-	title=""
-	prelims=""
-	postlims=""
-endif
-
-	pandoc $(metadata) ${rendered}/${which_rendered} -o ${output_tex} \
-		--template ${latex_build}/Thesis.tex \
-		--chapter \
-		--variable=packages:"$$packages" \
-		--variable=titlepage:"$$titlepage" \
-		--variable=prelims:"$$prelims" \
-		--variable=postlims:"$$postlims" \
-        --filter ${latex_build}/filters.py
+	$(packages); \
+	$(title); \
+	$(abbreviations); \
+	$(prelims); \
+	$(postlims); \
+	$(call pandoc,$(output_tex))
 
 docx:
 	pandoc $(metadata) test.md -o test.docx
