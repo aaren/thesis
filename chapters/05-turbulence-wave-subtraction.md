@@ -360,10 +360,10 @@ power in the pre-current signal originates from standing waves.
 
 At higher frequencies it becomes increasingly difficult to resolve the peaks.
 @harris1978 gives the resolution bandwidth of a single spectral line (using a
-6.0dB drop from the peak) for several window functions in @table:window-
-bandwidth. A pair of equal amplitude peaks must be separated by at least this
-bandwidth if they are to be resolved. Unequal peaks may require a significantly
-larger separation.
+6.0dB drop from the peak) for several window functions in @table:window-bandwidth.
+A pair of equal amplitude peaks must be separated by at least this
+bandwidth if they are to be resolved. Unequal peaks may require a
+significantly larger separation.
 
 
 | Window     | resolution bandwidth (6dB)  |
@@ -372,8 +372,9 @@ larger separation.
 | Hamming    | 1.81 |
 | Hanning    | 1.65 |
 | Blackman   | 2.35 |
-Resolution bandwidth for several different windowing functions {#table:window-
-bandwidth}
+
+Table: Resolution bandwidth for several different windowing functions
+{#table:window-bandwidth}
 
 where a bin is $\omega_s / N$ for the sampling frequency $\omega_s$ and the
 number of samples $N$.
