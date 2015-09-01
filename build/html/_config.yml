@@ -27,6 +27,7 @@ github:
 
 pandoc:
     extensions:
+        - mathjax
         - filter: ./filters.py
 
 collections:
