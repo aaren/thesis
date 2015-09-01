@@ -286,7 +286,7 @@ approximation.
 The full dispersion relation for two dimensional water waves is
 
 $$
-w^2 = g k * \tanh(k * H)
+w^2 = g k \tanh(k H)
 $$
 
 and the condition for standing waves is given by
