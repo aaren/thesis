@@ -35,7 +35,7 @@ ifneq ("$(chapter)", "")
 	which_rendered = "$(fname).md"
 
 	title = title=""
-	prelims = prelims=""
+	prelims = prelims='\tableofcontents'
 	postlims = postlims=""
 endif
 
