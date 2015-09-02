@@ -5,13 +5,138 @@ title: Dynamic Mode Decomposition
 
 # Dynamic Mode Decomposition of a Gravity Current {#sec:dmd}
 
-## Introduce DMD
+## Introduction
 
-### Build Physical Intuition
+We wish to investigate the internal structure of a gravity current.
+Here we describe a technique that identifies and separates coherent
+structures in the flow.
+
+The Dynamic Mode Decomposition (DMD) separates a time series of
+spatially distributed data into a set of spectrally distinct
+spatial modes. That is, for a given time series, we can find a set
+of spatial structures that oscillate with specific frequencies that
+together will reconstruct the time series.
 
 ### Basic Linear Algebra
 
+Our formulation of the DMD relies on a series of data snapshots
+equispaced in 'time'. The data doesn't have to be a time-series and 
+the 'time' spacing can equally well be some other dimension;
+however, we will refer to this axis as 'time'.
+
+Each data snapshot is formed by reshaping the data into a
+one-dimensional vector. For example, a 2D PIV of shape IxJ would
+become a vector of shape 1xM, where $M=IJ$. Note that the DMD is
+agnostic toward the actual form of the data: each snapshot doesn't
+have to come from a regular grid and could instead come from a
+sparse set of measurements. $M$ is merely the number of measurement
+points.
+
+We denote a single snapshot as $\psi_i$, with our full time-series being
+represented by a $MxN$ matrix with these snapshots as columns:
+
+$$
+[\psi_0, \psi_1, ..., \psi_N]
+$$
+
+We postulate that there exists an operator $\matr{A}$ that maps
+between successive snapshots:
+
+$$
+\psi_{t + 1} = \matr{A} \psi_t
+$$
+
+i.e. that successive snapshots are related by a linear,
+time-invariant operator $\matr{A}$.
+
+We can now form two snapshot sequences, $\Psi_{0,1}$ and relate them
+by $\matr{A}$
+
+$$
+\Psi_0 = [\psi_0, \psi_1, ... , \psi_{N-1}]
+$$
+
+$$
+\Psi_1 = [\psi_1, \psi_2, ... , \psi_{N}]
+$$
+
+$$
+\Psi_1 = \matr{A} \Psi_0
+$$
+
+...
+
+We follow the optimal amplitude technique described by
+@jovanovic-etal2014, where the mode amplitudes are found by a least
+squares fit to the trajectory in state space.
+
+...
+
+The DMD algorithm seeks an approximation to the eigenvectors of
+$\matr{A}$. These form the *dynamic modes* of the system and
+represent oscillating spatial structures. For each dynamic mode
+there is an associated *amplitude* and *frequency*.
+
+All of these quantities are generally complex. Complex dynamic modes
+contain phase information and permit structures that translate in
+time (e.g. traveling waves). Complex frequencies allow for growth /
+decay of the corresponding mode.
+
+
+
+### Build Physical Intuition
+
+For $M$ measurement points, we can think of a snapshot $\psi_i$ as a
+vector in a $M$-dimensional vector space. 
+
+A length $N$ time-series describes a trajectory in this vector
+space.
+
+The DMD finds a set of basis vectors that best approximate this
+trajectory.
+
+
 ### Compare with POD / EOF
+
+The DMD is similar to the Proper Orthogonal Decomposition (POD),
+which differs only in notation from Empirical Orthogonal Function
+(EOF) analysis and Principal Component Analysis (PCA). We only
+refer to POD from now on.
+
+The POD produces spatially orthogonal modes, where the DMD modes are
+spectrally orthogonal. That is, the POD modes can contain a mix of
+frequencies where a DMD mode only ever represents a single
+frequency. 
+
+The spatial orthogonality of the POD restricts the form of subsequent modes.
+
+### Sparsity
+
+A useful attribute of the POD is its facility for *model reduction*:
+we can select a subset of modes to reconstruct the time-series to a
+desired statistical threshold. Each POD mode is associated with an
+amplitude that is equal to its contribution to the total variance,
+making it trivial to rank modes by statistical contribution. 
+
+By comparison, the DMD does not rank modes in any single way and
+offers no obvious way to form a reduced model of the system. We are
+left with the question of how to select a subset of modes that best
+represent the flow.
+
+Existing methods: 
+
+- Exhaustive search (Chen et al)
+
+- Sparsity promoting DMD (jovanovic) 
+
+- Assumption of convergence (semeraro)
+
+@semeraro-etal2012 assume that in a sufficiently well developed
+flow, all physically relevant modes will have converged on
+attractors of the turbulence. They consider a mode *convergent* if
+its frequency varies by less than a threshold (0.1%) between
+multiple time-series and the cross-correlation coefficient is >
+0.75 across the time-series.
 
 
 ## Apply DMD to data
@@ -228,24 +353,6 @@ the dynamical drivers of the flow (##reference).
 
 There is no clear way to select the dominant DMD modes. This is a
 weakness of the standard DMD method.
-
-
-## Introduce problem 'how to select modes'?
-
-We have the problem of selecting the dynamic modes that best
-represent the flow. A number of techniques have been proposed to
-achieve this.
-
-Overview existing methods - the intensive one used by chen?, semeraro, sparse
-dmd
-
-semeraro - 'convergence on attractors of fully developed turbulence'
-
-In the sparse method we select a subset of the dmd modes that best
-approximate the data series, given a sparsity criterion that varies
-the number of modes in the subset.
-
-## Define sparse method
 
 
 ## Apply sparse method
