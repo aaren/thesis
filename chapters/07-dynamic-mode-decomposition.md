@@ -39,18 +39,18 @@ $$
 [\psi_0, \psi_1, ..., \psi_N]
 $$
 
-We postulate that there exists an operator $\matr{A}$ that maps
+We postulate that there exists an operator $A$ that maps
 between successive snapshots:
 
 $$
-\psi_{t + 1} = \matr{A} \psi_t
+\psi_{t + 1} = A \psi_t
 $$
 
 i.e. that successive snapshots are related by a linear,
-time-invariant operator $\matr{A}$.
+time-invariant operator $A$.
 
 We can now form two snapshot sequences, $\Psi_{0,1}$ and relate them
-by $\matr{A}$
+by $A$
 
 $$
 \Psi_0 = [\psi_0, \psi_1, ... , \psi_{N-1}]
@@ -61,7 +61,7 @@ $$
 $$
 
 $$
-\Psi_1 = \matr{A} \Psi_0
+\Psi_1 = A \Psi_0
 $$
 
 ...
@@ -73,7 +73,7 @@ squares fit to the trajectory in state space.
 ...
 
 The DMD algorithm seeks an approximation to the eigenvectors of
-$\matr{A}$. These form the *dynamic modes* of the system and
+$A$. These form the *dynamic modes* of the system and
 represent oscillating spatial structures. For each dynamic mode
 there is an associated *amplitude* and *frequency*.
 
