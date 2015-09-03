@@ -117,6 +117,8 @@
 \setcounter{totalnumber}{20}
 \setcounter{dbltopnumber}{9}
 \usepackage{graphicx}
+    % set default width for images
+    \setkeys{Gin}{width=.8\textwidth}
 \usepackage{epstopdf}
 \usepackage[scriptsize]{subfigure}
 \usepackage{booktabs}
