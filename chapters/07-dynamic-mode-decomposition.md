@@ -5,6 +5,16 @@ title: Dynamic Mode Decomposition
 
 # Dynamic Mode Decomposition of a Gravity Current {#sec:dmd}
 
+## Editorial
+
+I feel on top of this chapter, it just needs putting down. I have a
+good idea of the layout and what plots to look at.
+
+Note that I've done a big chunk of the work elsewhere
+<http://github.com/aaren/sparse_dmd>, including all the algorithmic
+details.
+
+
 ## Introduction
 
 We wish to investigate the internal structure of a gravity current.
