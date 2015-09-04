@@ -132,11 +132,58 @@
     <div class="content container">
       <div class="chapter">
   <h1 id="sec:dmd">1: Dynamic Mode Decomposition of a Gravity Current</h1>
-<h2 id="introduce-dmd">1.1: Introduce DMD</h2>
-<h3 id="build-physical-intuition">1.1.1: Build Physical Intuition</h3>
-<h3 id="basic-linear-algebra">1.1.2: Basic Linear Algebra</h3>
-<h3 id="compare-with-pod-eof">1.1.3: Compare with POD / EOF</h3>
-<h2 id="apply-dmd-to-data">1.2: Apply DMD to data</h2>
+<h2 id="editorial">1.1: Editorial</h2>
+<p>I feel on top of this chapter, it just needs putting down. I have a good idea of the layout and what plots to look at.</p>
+<p>Note that I've done a big chunk of the work elsewhere <a href="http://github.com/aaren/sparse_dmd" class="uri">http://github.com/aaren/sparse_dmd</a>, including all the algorithmic details.</p>
+<h2 id="introduction">1.2: Introduction</h2>
+<p>We wish to investigate the internal structure of a gravity current. Here we describe a technique that identifies and separates coherent structures in the flow.</p>
+<p>The Dynamic Mode Decomposition (DMD) separates a time series of spatially distributed data into a set of spectrally distinct spatial modes. That is, for a given time series, we can find a set of spatial structures that oscillate with specific frequencies that together will reconstruct the time series.</p>
+<h3 id="basic-linear-algebra">1.2.1: Basic Linear Algebra</h3>
+<p>Our formulation of the DMD relies on a series of data snapshots equispaced in 'time'. The data doesn't have to be a time-series and the 'time' spacing can equally well be some other dimension; however, we will refer to this axis as 'time'.</p>
+<p>Each data snapshot is formed by reshaping the data into a one-dimensional vector. For example, a 2D PIV of shape IxJ would become a vector of shape 1xM, where <span class="math inline">\(M=IJ\)</span>. Note that the DMD is agnostic toward the actual form of the data: each snapshot doesn't have to come from a regular grid and could instead come from a sparse set of measurements. <span class="math inline">\(M\)</span> is merely the number of measurement points.</p>
+<p>We denote a single snapshot as <span class="math inline">\(\psi_i\)</span>, with our full time-series being represented by a <span class="math inline">\(MxN\)</span> matrix with these snapshots as columns:</p>
+<p><span class="math display">\[
+[\psi_0, \psi_1, ..., \psi_N]
+\]</span></p>
+<p>We postulate that there exists an operator <span class="math inline">\(A\)</span> that maps between successive snapshots:</p>
+<p><span class="math display">\[
+\psi_{t + 1} = A \psi_t
+\]</span></p>
+<p>i.e. that successive snapshots are related by a linear, time-invariant operator <span class="math inline">\(A\)</span>.</p>
+<p>We can now form two snapshot sequences, <span class="math inline">\(\Psi_{0,1}\)</span> and relate them by <span class="math inline">\(A\)</span></p>
+<p><span class="math display">\[
+\Psi_0 = [\psi_0, \psi_1, ... , \psi_{N-1}]
+\]</span></p>
+<p><span class="math display">\[
+\Psi_1 = [\psi_1, \psi_2, ... , \psi_{N}]
+\]</span></p>
+<p><span class="math display">\[
+\Psi_1 = A \Psi_0
+\]</span></p>
+<p>...</p>
+<p>We follow the optimal amplitude technique described by <span class="citation" data-cites="jovanovic-etal2014">@jovanovic-etal2014</span>, where the mode amplitudes are found by a least squares fit to the trajectory in state space.</p>
+<p>...</p>
+<p>The DMD algorithm seeks an approximation to the eigenvectors of <span class="math inline">\(A\)</span>. These form the <em>dynamic modes</em> of the system and represent oscillating spatial structures. For each dynamic mode there is an associated <em>amplitude</em> and <em>frequency</em>.</p>
+<p>All of these quantities are generally complex. Complex dynamic modes contain phase information and permit structures that translate in time (e.g. traveling waves). Complex frequencies allow for growth / decay of the corresponding mode.</p>
+<h3 id="build-physical-intuition">1.2.2: Build Physical Intuition</h3>
+<p>For <span class="math inline">\(M\)</span> measurement points, we can think of a snapshot <span class="math inline">\(\psi_i\)</span> as a vector in a <span class="math inline">\(M\)</span>-dimensional vector space.</p>
+<p>A length <span class="math inline">\(N\)</span> time-series describes a trajectory in this vector space.</p>
+<p>The DMD finds a set of basis vectors that best approximate this trajectory.</p>
+<h3 id="compare-with-pod-eof">1.2.3: Compare with POD / EOF</h3>
+<p>The DMD is similar to the Proper Orthogonal Decomposition (POD), which differs only in notation from Empirical Orthogonal Function (EOF) analysis and Principal Component Analysis (PCA). We only refer to POD from now on.</p>
+<p>The POD produces spatially orthogonal modes, where the DMD modes are spectrally orthogonal. That is, the POD modes can contain a mix of frequencies where a DMD mode only ever represents a single frequency.</p>
+<p>The spatial orthogonality of the POD restricts the form of subsequent modes.</p>
+<h3 id="sparsity">1.2.4: Sparsity</h3>
+<p>A useful attribute of the POD is its facility for <em>model reduction</em>: we can select a subset of modes to reconstruct the time-series to a desired statistical threshold. Each POD mode is associated with an amplitude that is equal to its contribution to the total variance, making it trivial to rank modes by statistical contribution.</p>
+<p>By comparison, the DMD does not rank modes in any single way and offers no obvious way to form a reduced model of the system. We are left with the question of how to select a subset of modes that best represent the flow.</p>
+<p>Existing methods:</p>
+<ul>
+<li><p>Exhaustive search (Chen et al)</p></li>
+<li><p>Sparsity promoting DMD (jovanovic)</p></li>
+<li><p>Assumption of convergence (semeraro)</p></li>
+</ul>
+<p><span class="citation" data-cites="semeraro-etal2012">@semeraro-etal2012</span> assume that in a sufficiently well developed flow, all physically relevant modes will have converged on attractors of the turbulence. They consider a mode <em>convergent</em> if its frequency varies by less than a threshold (0.1%) between multiple time-series and the cross-correlation coefficient is &gt; 0.75 across the time-series.</p>
+<h2 id="apply-dmd-to-data">1.3: Apply DMD to data</h2>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-1" class="toggle">
@@ -321,13 +368,7 @@ fig.tight_layout()</code></pre></div>
 </div>
 <p>Here we see a series of modes ranked by their statistical contribution to the flow. We could rank our DMD modes by this, their contribution to the variance, but this doesn't necessarily capture the dynamical drivers of the flow (##reference).</p>
 <p>There is no clear way to select the dominant DMD modes. This is a weakness of the standard DMD method.</p>
-<h2 id="introduce-problem-how-to-select-modes">1.3: Introduce problem 'how to select modes'?</h2>
-<p>We have the problem of selecting the dynamic modes that best represent the flow. A number of techniques have been proposed to achieve this.</p>
-<p>Overview existing methods - the intensive one used by chen?, semeraro, sparse dmd</p>
-<p>semeraro - 'convergence on attractors of fully developed turbulence'</p>
-<p>In the sparse method we select a subset of the dmd modes that best approximate the data series, given a sparsity criterion that varies the number of modes in the subset.</p>
-<h2 id="define-sparse-method">1.4: Define sparse method</h2>
-<h2 id="apply-sparse-method">1.5: Apply sparse method</h2>
+<h2 id="apply-sparse-method">1.4: Apply sparse method</h2>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-11" class="toggle">
@@ -484,8 +525,8 @@ plotter <span class="op">=</span> SparsePlots(sdmd)</code></pre></div>
 </figure>
 
 </div>
-<h2 id="compare-basic-flow-characterisation-before-and-after">1.6: Compare basic flow characterisation before and after</h2>
-<h2 id="compare-pdf-before-and-after">1.7: Compare pdf before and after</h2>
+<h2 id="compare-basic-flow-characterisation-before-and-after">1.5: Compare basic flow characterisation before and after</h2>
+<h2 id="compare-pdf-before-and-after">1.6: Compare pdf before and after</h2>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-96" class="toggle">

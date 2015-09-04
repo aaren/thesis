@@ -187,7 +187,10 @@ runs <span class="op">=</span> [Run(index) <span class="cf">for</span> index <sp
     run.nondimensionalise()</code></pre></div>
 </div>
 </div>
-<h2 id="introduction">1.1: Introduction</h2>
+<h2 id="editorial">1.1: Editorial</h2>
+<p>What you see below is a process for extracting the waves from the 2d interface data. It is so far devoid of discussion.</p>
+<p>This chapter could stand alone, or it could have some two-layer turbulence stuff included (these have standing waves though).</p>
+<h2 id="introduction">1.2: Introduction</h2>
 <p>We are considering the release of a gravity current into a two layer fluid in a lock release configuration.</p>
 <p><a href="#fig:example-wavefield">Figure 1</a> shows the non-dimensionalised interfacial wavefield from one of these experiments in a hovmoller plot.</p>
 <div class="collapsible">
@@ -213,7 +216,7 @@ plt.colorbar()</code></pre></div>
 </figure>
 
 </div>
-<p>We clearly see the evolution of an amplitude ordered series of waves following the release of the lock gate at <span class="math inline"><em>t</em> = 0</span>.</p>
+<p>We clearly see the evolution of an amplitude ordered series of waves following the release of the lock gate at <span class="math inline">\(t=0\)</span>.</p>
 <p>We have performed a number of experiments. The wavefields for each run can be seen in <a href="#fig:all-wavefields">Figure 2</a>.</p>
 <p><em>[Aaron]: many more runs to consider but they need a little straightening up first.</em></p>
 <div class="collapsible">
@@ -243,11 +246,11 @@ fig.tight_layout()</code></pre></div>
 
 </div>
 <p>We wish to investigate the properties of these wavefields. The motivation for this study is based in the field - in the analysis of the effects of storms on the atmosphere. Therefore the analysis here will use techniques that can be extended to field data. In particular we expect that the techniques used will be effective in the presence of noise and other confounding factors.</p>
-<h2 id="wave-detection">1.2: Wave detection</h2>
+<h2 id="wave-detection">1.3: Wave detection</h2>
 <p>We want to identify the individual waves that we can see in the wave fields. There are many ways that we could do this but we are looking for a robust method.</p>
 <p>The defining property of our waves is that they are of constant speed and constant form, i.e. they form straight lines that cover most of the field.</p>
 <p>Detection of such features is efficiently performed by the ridgelet transform.</p>
-<h3 id="the-ridgelet-transform">1.2.1: The Ridgelet Transform</h3>
+<h3 id="the-ridgelet-transform">1.3.1: The Ridgelet Transform</h3>
 <p>The <em>Ridgelet Transform</em> is conceptually similar to the one-dimensional wavelet transform. Instead of a one-dimensional wavelet we use a two-dimensional ridge that forms a wavelet in cross section. Instead of convolving over a single axis, we convolve this ridge over our data in multiple directions.</p>
 <p>The ridgelet transform is effective at finding straight, ridge-like structures in data, with the caveat that they must be comparable to the data field in length.</p>
 <p>The easiest way to perform a ridgelet transform is to perform a 1D wavelet transform over the position axis of the <em>Radon Transform</em>.</p>
@@ -301,8 +304,8 @@ fig.tight_layout()</code></pre></div>
 </figure>
 
 </div>
-<p>In <a href="#fig:radon-circle">Figure 3</a> we can see the individual waves represented as peaks in the radon space <span class="math inline">(<em>r</em>, <em>θ</em>)</span>. Identifying individual waves is as simple as distinguishing these peaks. The full ridgelet transform makes this even easier.</p>
-<p>The ridgelet transform has three axes: position, angle and scale. The first two are in common with the radon transform <span class="math inline">(<em>r</em>, <em>θ</em>)</span> and the last is as in the wavelet transform. By selecting a subset of scales we effectively band-pass filter our search, selecting only features within a particular scale range.</p>
+<p>In <a href="#fig:radon-circle">Figure 3</a> we can see the individual waves represented as peaks in the radon space <span class="math inline">\((r, \theta)\)</span>. Identifying individual waves is as simple as distinguishing these peaks. The full ridgelet transform makes this even easier.</p>
+<p>The ridgelet transform has three axes: position, angle and scale. The first two are in common with the radon transform <span class="math inline">\((r, \theta)\)</span> and the last is as in the wavelet transform. By selecting a subset of scales we effectively band-pass filter our search, selecting only features within a particular scale range.</p>
 <p>We have some a priori knowledge about our wave fields that help us constrain the search for waves: (i) the waves exist within a certain range of speeds; (ii) the wavelength of the waves is roughly bounded. This knowledge limits the angles (speed) and scales (wavelength) that we need to search over.</p>
 <div class="collapsible">
 
@@ -454,7 +457,7 @@ plt.ylabel(<span class="st">&#39;Position, pixels&#39;</span>)</code></pre></div
     <span class="cf">return</span> mr, cr</code></pre></div>
 </div>
 </div>
-<h4 id="ridgelet-reconstruction">1.2.1.1: Ridgelet reconstruction</h4>
+<h4 id="ridgelet-reconstruction">1.3.1.1: Ridgelet reconstruction</h4>
 <p>As an aside, the ridgelet transform can be used to filter and reconstruct the original input. As with the wavelet reconstruction, we can reconstruct given a subset of the scales:</p>
 <div class="collapsible">
 
@@ -482,7 +485,7 @@ axes[<span class="dv">1</span>].contourf(r.waves(space, time)[interior], <span c
 </div>
 <p>In this way we reconstruct a synthetic wave-field with no noise. Whilst this may look convincing we must remember that it is the wave-field as seen by the wavelet function: if the shape of our wavelet function does not exactly match the shape of our waves then we can expect our reconstruction to be off. Here we have excluded some of the scales used to compute the transform and the reconstruction is not absolute.</p>
 <p>We could equally well perform the reconstruction using a subset of the projection angles, seeking structures within a range of speeds.</p>
-<h4 id="wavelet-selection">1.2.1.2: Wavelet selection</h4>
+<h4 id="wavelet-selection">1.3.1.2: Wavelet selection</h4>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-13" class="toggle">
@@ -560,7 +563,7 @@ fig, axes <span class="op">=</span> plt.subplots(ncols<span class="op">=</span><
 </figure>
 
 </div>
-<h3 id="peak-finding">1.2.2: Peak finding</h3>
+<h3 id="peak-finding">1.3.2: Peak finding</h3>
 <p>We can search for the maxima using a local maximum filter. The difficulty with doing this in two dimensions is that there are many small peaks that would be picked up. We can set a peak size criterion but there isn't a robust way of doing it - we will have difficulty detecting the smaller peaks with anything sure to filter out noisy peaks.</p>
 <div class="collapsible">
 
@@ -590,8 +593,8 @@ plt.plot(position_max, angle_max, <span class="st">&#39;o&#39;</span>)</code></p
 </figure>
 
 </div>
-<p>We can simplify our peak finding problem by making an assumption about the form of the data. We are looking for amplitude ordered solitary waves. These travel with constant speed that decreases with amplitude. Barring reflections in the tank we do not expect these waves to collide and they should take the form of separated straight lines in <span class="math inline">(<em>x</em>, <em>t</em>)</span>. Inspection of the wave-fields suggest that this is the case.</p>
-<p>Lines separated in <span class="math inline">(<em>x</em>, <em>t</em>)</span> will be ordered along <span class="math inline"><em>r</em></span> in the radon space <span class="math inline">(<em>r</em>, <em>θ</em>)</span>. This is what we see in our ridgelet transforms. Therefore, instead of finding the maxima in the 2d space, we need only find the maxima along <span class="math inline"><em>r</em></span> as this is enough to uniquely identify a wave.</p>
+<p>We can simplify our peak finding problem by making an assumption about the form of the data. We are looking for amplitude ordered solitary waves. These travel with constant speed that decreases with amplitude. Barring reflections in the tank we do not expect these waves to collide and they should take the form of separated straight lines in <span class="math inline">\((x, t)\)</span>. Inspection of the wave-fields suggest that this is the case.</p>
+<p>Lines separated in <span class="math inline">\((x, t)\)</span> will be ordered along <span class="math inline">\(r\)</span> in the radon space <span class="math inline">\((r, \theta)\)</span>. This is what we see in our ridgelet transforms. Therefore, instead of finding the maxima in the 2d space, we need only find the maxima along <span class="math inline">\(r\)</span> as this is enough to uniquely identify a wave.</p>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-18" class="toggle">
@@ -650,7 +653,7 @@ plt.plot(x[np.where(minima)], signal[np.where(minima)], <span class="st">&#39;o&
 </div>
 <p>We have reduced our wave detection problem to that of peak detection of a strong signal in a single dimension.</p>
 <p>Again, we must be careful in our interpretation of the peaks: what we are seeing is the wavelet function convolved with the sinogram. The wavelet function necessarily has zero mean - it cannot be singly peaked. In particular at the leading edge of the wave packet we can expect to see a small spurious minima before the proper maxima (or vice-versa if the first wave is a depression). We remove these spurious peaks by ignoring all points ahead of the absolute extremal value, making the assumption that the largest amplitude wave is the first wave in the series.</p>
-<p>With the positions (<span class="math inline"><em>r</em></span>) of the extrema found, we find the corresponding angles (<span class="math inline"><em>θ</em></span>) by looking for the maximum at the given <span class="math inline"><em>r</em></span>.</p>
+<p>With the positions (<span class="math inline">\(r\)</span>) of the extrema found, we find the corresponding angles (<span class="math inline">\(\theta\)</span>) by looking for the maximum at the given <span class="math inline">\(r\)</span>.</p>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-20" class="toggle">
@@ -705,7 +708,7 @@ plt.plot(<span class="op">*</span>abs_max.T, marker<span class="op">=</span><spa
 </figure>
 
 </div>
-<h3 id="summary">1.2.3: Summary</h3>
+<h3 id="summary">1.3.3: Summary</h3>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-22" class="toggle">
@@ -897,7 +900,7 @@ fig.tight_layout()</code></pre></div>
     r.speeds <span class="op">=</span> [<span class="dv">1</span> <span class="op">/</span> wave_line[<span class="dv">0</span>] <span class="cf">for</span> wave_line <span class="op">in</span> r.wave_lines]</code></pre></div>
 </div>
 </div>
-<h2 id="results">1.3: Results</h2>
+<h2 id="results">1.4: Results</h2>
 <p><a href="#fig:speed-vs-amplitude">Figure 14</a> shows wave speed against wave amplitude for each wave detected in a run and for each run.</p>
 <div class="collapsible">
 
@@ -1041,7 +1044,7 @@ fig.tight_layout()</code></pre></div>
 </figure>
 
 </div>
-<h3 id="bimodal-wave-distribution">1.3.1: Bimodal wave distribution:</h3>
+<h3 id="bimodal-wave-distribution">1.4.1: Bimodal wave distribution:</h3>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-32" class="toggle">
@@ -1060,8 +1063,8 @@ fig.tight_layout()</code></pre></div>
 
 </div>
 <p>The waves can travel at two distinct speeds, before and after crossing the current head. This means two distinct branches of maxima in the ridgelet transform, separated in theta.</p>
-<h2 id="wavelets">1.4: Wavelets</h2>
-<p>Now we will apply the wavelet transform to each run. We can equally well do this over a space or time series from any transect through the signal. For now we will apply the transform to the time series found by considering the interface height at <span class="math inline"><em>x</em> = 2</span>m.</p>
+<h2 id="wavelets">1.5: Wavelets</h2>
+<p>Now we will apply the wavelet transform to each run. We can equally well do this over a space or time series from any transect through the signal. For now we will apply the transform to the time series found by considering the interface height at <span class="math inline">\(x=2\)</span>m.</p>
 <p>We will consider the transform with both the Morlet and Ricker (aka Mexican Hat) wavelets. The Morlet wavelet is oscillatory and complex valued, whereas the Ricker is real valued and single peaked.</p>
 <div class="collapsible">
 
@@ -1282,7 +1285,7 @@ plt.plot(tr.anomaly_data<span class="op">*</span> <span class="dv">22</span>)</c
 </figure>
 
 </div>
-<h2 id="misc-crap">1.5: Misc crap</h2>
+<h2 id="misc-crap">1.6: Misc crap</h2>
 <div class="collapsible">
 
 <input type="checkbox" id="codeblock-42" class="toggle">
