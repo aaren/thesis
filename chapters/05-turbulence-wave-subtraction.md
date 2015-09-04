@@ -44,7 +44,7 @@ Each time I thought I had the problem solved I came across some
 additional feature of the waves that I hadn't accounted for.
 This happened for each of
 
-- the shallow water approximation
+- the shallow water approximation not holding
 - the horizontal variation of standing waves
 - the vertical profile varying strongly with frequency
 - the waves decaying with time
@@ -53,6 +53,14 @@ Realising the waves were not a PIV processing artefact and were
 standing waves (and therefore controllable) was frustrating. This
 problem was likely avoidable experimentally and demonstrates nicely
 what can happen when performing lab work under excess time pressure.
+
+All runs are contaminated with background waves. We can remove high
+frequency waves from all runs; however, lower frequency waves can
+only be removed from runs with a long measurement period prior to
+the front passage. Not knowing this, when doing the experiments I
+cut down the majority of the runs to include only a short period
+before the front passage (to save disk space). This leaves us with 5
+runs that can be wave-subtracted :(
 
 
 ## Overview
