@@ -40,6 +40,14 @@ for run in runs:
     run.nondimensionalise()
 ```
 
+## Editorial
+
+What you see below is a process for extracting the waves from the 2d
+interface data. It is so far devoid of discussion.
+
+This chapter could stand alone, or it could have some two-layer
+turbulence stuff included (these have standing waves though).
+
 ## Introduction
 
 We are considering the release of a gravity current into a two layer
