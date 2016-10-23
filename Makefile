@@ -1,4 +1,5 @@
-SHELL := /bin/bash  # This is pretty important. Default is /bin/sh
+MAKEFLAGS += --warn-undefined-variables
+SHELL = bash -euo pipefail # This is pretty important. Default is /bin/sh
 
 metadata = meta.yaml
 
@@ -56,7 +57,7 @@ define pandoc
 		--variable=title:"$$title" \
 		--variable=prelims:"$$prelims" \
 		--variable=postlims:"$$postlims" \
-        --filter $(latex_build)/filters.py
+		--filter $(latex_build)/filters.py
 endef
 
 
